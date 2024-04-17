@@ -31,12 +31,12 @@ const getNormalizedTag = async (tag: CollectionEntry<'tag'>): Promise<Tag> => {
   const { id, slug = '', data } = tag
 
   const { Content } = await tag.render()
-  const { permalink, title, description, image, metadata = {} } = data
+  const { title, description, image, metadata = {} } = data
 
   return {
     id,
     slug,
-    permalink,
+    
     title,
     description,
     image,

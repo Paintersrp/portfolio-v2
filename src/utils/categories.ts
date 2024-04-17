@@ -33,12 +33,12 @@ const getNormalizedCategory = async (category: CollectionEntry<'category'>): Pro
   const { id, slug = '', data } = category
 
   const { Content } = await category.render()
-  const { permalink, title, description, image, metadata = {} } = data
+  const { title, description, image, metadata = {} } = data
 
   return {
     id,
     slug,
-    permalink,
+    
     title,
     description,
     image,
