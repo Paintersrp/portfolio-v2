@@ -1,0 +1,59 @@
+---
+import { cn } from '@/utils/utils'
+import { Icon } from 'astro-icon/components'
+
+type Status = 'not-started' | 'in-progress' | 'complete'
+type StatusMap = { [key in Status]: { icon: string; color: string } }
+
+interface Item {
+  text: string
+  status: Status
+}
+
+interface Classes {
+  container?: string
+  list?: string
+  item?: string
+  icon?: string
+  text?: string
+}
+
+interface Props {
+  items: Item[]
+  classes?: Classes
+}
+
+const { items, classes } = Astro.props
+
+const statusMap: StatusMap = {
+  'not-started': {
+    icon: 'tabler:square',
+    color: 'text-stone-400',
+  },
+  complete: {
+    icon: 'tabler:square-check',
+    color: 'text-green-500',
+  },
+  'in-progress': {
+    icon: 'tabler:square-half',
+    color: 'text-amber-200',
+  },
+}
+---
+
+<div class="mb-6 not-prose text-lg">
+  <ul class="list-none">
+    {
+      items.map((item) => {
+        const { icon, color } = statusMap[item.status]
+
+        return (
+          <li class={cn('flex gap-2 items-center', classes?.item)}>
+            <Icon name={icon} class={cn(classes?.icon, color)} />
+            <span class={classes?.text}>{item.text}</span>
+          </li>
+        )
+      })
+    }
+  </ul>
+</div>

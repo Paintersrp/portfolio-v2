@@ -1,0 +1,35 @@
+---
+import Button from '@/components/ui/Button.astro'
+import { cn } from '@/utils/utils'
+
+import type { Action } from '@/types/site'
+
+interface Props {
+  actions: Action[]
+  classes?: {
+    container?: string
+    action?: string
+  }
+}
+
+const { classes = {}, actions } = Astro.props
+
+const { container: containerClass = '', action: actionClass = '' } = classes
+---
+
+{
+  actions && (
+    <div
+      class={cn(
+        'max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4',
+        containerClass
+      )}
+    >
+      {actions.map((action) => (
+        <div class={cn('flex w-full sm:w-auto', actionClass)}>
+          {typeof action === 'string' ? <Fragment set:html={action} /> : <Button {...action} />}
+        </div>
+      ))}
+    </div>
+  )
+}

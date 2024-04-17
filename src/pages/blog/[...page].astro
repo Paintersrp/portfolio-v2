@@ -1,0 +1,60 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import Headline from '@/components/blog/ui/BlogHeadline.astro'
+import BlogList from '@/components/blog/ui/List.astro'
+import Pagination from '@/components/blog/ui/Pagination.astro'
+import Layout from '@/layouts/PageLayout.astro'
+import { getStaticPathsBlogList } from '@/utils/blog'
+
+import type { InferGetStaticPropsType, GetStaticPaths } from 'astro'
+
+export const prerender = true
+
+export const getStaticPaths = (async ({ paginate }) => {
+  return await getStaticPathsBlogList({ paginate })
+}) satisfies GetStaticPaths
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { page } = Astro.props as Props
+
+const currentPage = page.currentPage ?? 1
+
+const metadata = {
+  title: `Blog${currentPage > 1 ? ` — Page ${currentPage}` : ''}`,
+  robots: {
+    index: true && currentPage === 1,
+    follow: true,
+  },
+}
+---
+
+<Layout metadata={metadata} showRssFeed>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline>Browse Posts</Headline>
+
+    <div
+      class="mb-4 md:mb-8 flex flex-row gap-2 font-bold text-heading justify-center items-center"
+    >
+      <div class="flex items-center">
+        <Icon name="tabler:category-filled" class="size-5 md:size-6 mr-1 md:mr-2 text-primary" />
+        <a class="underline-link text-sm md:text-xl font-normal" href="/blog/categories">
+          Browse by Categories
+        </a>
+      </div>
+
+      ·
+
+      <div class="flex items-center">
+        <Icon name="tabler:tags" class="size-5 md:size-6 mr-1 md:mr-2 text-primary" />
+        <a class="underline-link text-sm md:text-xl font-normal" href="/blog/tags">
+          Browse by Tags
+        </a>
+      </div>
+    </div>
+
+    <BlogList posts={page.data} />
+    <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
+  </section>
+</Layout>

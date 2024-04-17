@@ -1,0 +1,40 @@
+---
+import About from '@/components/portfolio/About.astro'
+import ContactForm from '@/components/portfolio/ContactForm.astro'
+import Experience from '@/components/portfolio/Experience.astro'
+import Education from '@/components/portfolio/Education.astro'
+import Hero from '@/components/portfolio/Hero.astro'
+import LatestPosts from '@/components/portfolio/LatestPosts.astro'
+import Projects from '@/components/portfolio/Projects.astro'
+import Layout from '@/layouts/PageLayout.astro'
+import ReactContactForm from '@/components/portfolio/ReactContactForm'
+
+const metadata = {
+  ignoreTitleTemplate: true,
+  description:
+    'I am a software engineer with a passion for building and scaling products. I have experience in building web applications, APIs, and microservices.',
+  canonical: 'https://srp.vercel.app',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    url: 'https://srp.vercel.app',
+    locale: 'en_US',
+  },
+}
+---
+
+<Layout metadata={metadata}>
+  <Hero />
+  <About />
+  <Experience />
+  <Education />
+  <Projects />
+
+  <!-- Personal Testimonials - FUTURE -->
+
+  <LatestPosts />
+  <ReactContactForm client:load />
+  <!-- <ContactForm /> -->
+</Layout>

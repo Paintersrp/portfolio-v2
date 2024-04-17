@@ -1,0 +1,24 @@
+---
+import ProjectCard from '@/components/portfolio/ui/ProjectCard.astro'
+import HeadlinedSection from '@/components/ui/HeadlinedSection.astro'
+import { fetchProjects } from '@/utils/projects'
+
+const projects = await fetchProjects()
+---
+
+<HeadlinedSection
+  id="projects"
+  tagline="Projects"
+  title="Things I've Built"
+  classes={{
+    section: 'max-w-5xl mx-auto',
+    headline: {
+      container: 'text-left',
+      title: 'text-3xl lg:text-4xl',
+    },
+  }}
+>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {projects.map((project) => <ProjectCard {...project} />)}
+  </div>
+</HeadlinedSection>

@@ -1,0 +1,101 @@
+---
+import IconLink from '@/components/ui/IconLink.astro'
+import IconTag from '@/components/ui/IconTag.astro'
+import { cn } from '@/utils/utils'
+
+interface Classes {
+  container?: string
+  header?: string
+  title?: string
+  description?: string
+  stack?: string
+  actions?: {
+    container?: string
+    link?: {
+      container?: string
+      icon?: string
+    }
+  }
+}
+
+interface StackItem {
+  icon: string
+  text: string
+}
+
+interface Props {
+  classes?: Classes
+  title?: string
+  description?: string
+  githubUrl?: string
+  liveUrl?: string
+  stack?: StackItem[]
+  slug?: string
+}
+
+const {
+  classes,
+  title,
+  githubUrl,
+  liveUrl,
+  description = await Astro.slots.render('description'),
+  stack,
+  slug,
+} = Astro.props
+---
+
+<div
+  class={cn(
+    classes?.container,
+    'rounded-md bg-contrast text-card-foreground shadow px-4 py-2 flex flex-col justify-between'
+  )}
+>
+  <div>
+    <!-- Header -->
+    <div class={cn('flex items-center justify-between min-h-8', classes?.header)}>
+      <h3
+        class={cn(
+          'hover:text-primary hover:underline underline-offset-4 text-heading font-semibold leading-none tracking-tight text-xl',
+          classes?.title
+        )}
+      >
+        <a href={`/project/${slug}`}>{title}</a>
+      </h3>
+
+      {
+        githubUrl || liveUrl ? (
+          <div class={cn('flex gap-1', classes?.actions?.container)}>
+            {githubUrl && (
+              <IconLink
+                href={githubUrl}
+                icon="tabler:brand-github"
+                classes={classes?.actions?.link}
+              />
+            )}
+            {liveUrl && (
+              <IconLink
+                href={liveUrl}
+                icon="tabler:external-link"
+                classes={classes?.actions?.link}
+              />
+            )}
+          </div>
+        ) : null
+      }
+    </div>
+
+    <!-- Description -->
+    <div class={cn('py-2 text-muted', classes?.description)} set:html={description} />
+  </div>
+
+  <!-- Stack -->
+  {
+    stack && (
+      <div class={cn('space-x-1.5 mt-2', classes?.stack)}>
+        {stack.map((tag) => (
+          <IconTag {...tag} />
+        ))}
+      </div>
+    )
+  }
+</div>

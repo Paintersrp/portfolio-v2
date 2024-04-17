@@ -1,0 +1,32 @@
+---
+import { cn } from '@/utils/utils'
+import type { IconListItemType } from './IconListItem.astro'
+import IconListItem from './IconListItem.astro'
+
+interface Classes {
+  container?: string
+  title?: string
+  list?: string
+  item?: {
+    container?: string
+    icon?: string
+    text?: string
+  }
+}
+
+interface Props {
+  classes?: Classes
+  title: string
+  items: IconListItemType[]
+}
+
+const { classes, title, items } = Astro.props
+---
+
+<div class={cn('mb-6', classes?.container)}>
+  <h3 class={cn('text-default font-medium uppercase text-lg', classes?.title)}>{title}</h3>
+  <hr class="my-1 border-primary-hover mr-16" />
+  <ul class={classes?.list}>
+    {items.map((item) => <IconListItem {item} classes={classes?.item} />)}
+  </ul>
+</div>

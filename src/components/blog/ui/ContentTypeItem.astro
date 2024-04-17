@@ -1,0 +1,99 @@
+---
+import { Image } from 'astro:assets'
+
+import { cn } from '@/utils/utils'
+
+type Content = 'categories' | 'tags'
+
+interface Classes {
+  container?: string
+  image?: string
+  header?: string
+  title?: string
+  description?: string
+}
+
+interface Item {
+  title: string
+  slug: string
+  description?: string
+  image?: string
+}
+
+interface Props {
+  item: Item
+  count: number
+  type?: Content
+  classes?: Classes
+}
+
+const { item, count, type = 'categories', classes } = Astro.props
+const href = `/blog/${type}/${item.slug}`
+---
+
+<article
+  class={cn(
+    item.image ? 'md:grid-cols-1' : '',
+    'max-w-md mx-auto md:max-w-none grid',
+    classes?.container
+  )}
+>
+  {
+    item.image && (
+      <a class="relative block group" {href}>
+        <div
+          class={cn(
+            'relative h-0 pb-[56.25%] md:pb-[75%] md:h-32 lg:pb-[56.25%] overflow-hidden rounded shadow-lg',
+            classes?.image
+          )}
+        >
+          {item.image && (
+            <Image
+              src={item.image}
+              class={cn(
+                'absolute inset-0 object-cover w-full h-full rounded shadow-lg',
+                classes?.image
+              )}
+              widths={[400, 900]}
+              width={900}
+              height={300}
+              sizes="(max-width: 900px) 400px, 900px"
+              alt={item.title}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+        </div>
+      </a>
+    )
+  }
+
+  <header class={classes?.header}>
+    <span class="text-sm text-muted font-semibold">
+      {count}
+      {count <= 1 ? 'Post' : 'Posts'} Available
+    </span>
+
+    <h2
+      class={cn(
+        'text-xl sm:text-2xl font-semibold leading-tight mb-2 font-heading text-heading',
+        classes?.title
+      )}
+    >
+      {
+        href ? (
+          <a class="hover:text-primary" {href}>
+            {item.title}
+          </a>
+        ) : (
+          item.title
+        )
+      }
+    </h2>
+    {
+      item.description && (
+        <p class={cn('flex-grow text-muted text-lg', classes?.description)}>{item.description}</p>
+      )
+    }
+  </header>
+</article>

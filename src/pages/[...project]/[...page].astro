@@ -1,0 +1,55 @@
+---
+import merge from 'lodash.merge'
+
+import HomeLink from '@/components/projects/HomeLink.astro'
+import SingleProject from '@/components/projects/SingleProject.astro'
+import Layout from '@/layouts/PageLayout.astro'
+import { getCanonicalUrl } from '@/utils/paths'
+import { getStaticPathsProject } from '@/utils/projects'
+
+import type { InferGetStaticPropsType, GetStaticPaths } from 'astro'
+import type { MetadataConfig } from '@/types/site'
+
+export const prerender = true
+
+export const getStaticPaths = (async () => {
+  return await getStaticPathsProject()
+}) satisfies GetStaticPaths
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { project } = Astro.props as Props
+
+const canonical = project.metadata?.canonical || getCanonicalUrl(project.permalink)
+
+const metadata = merge(
+  {
+    title: project.title,
+    description: project.description,
+    robots: {
+      index: true,
+      follow: true,
+    },
+    openGraph: {
+      type: 'article',
+      ...(project.image
+        ? {
+            images: [
+              {
+                url: project.image,
+              },
+            ],
+          }
+        : {}),
+    },
+  },
+  {
+    ...(project?.metadata ? { ...project.metadata, canonical } : {}),
+  }
+) as MetadataConfig
+---
+
+<Layout metadata={metadata}>
+  <SingleProject project={{ ...project }} />
+  <HomeLink />
+</Layout>

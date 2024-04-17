@@ -1,0 +1,19 @@
+---
+import { cn } from '@/utils/utils'
+
+interface Props {
+  text: string
+  class?: string
+}
+
+const { text, class: className } = Astro.props
+---
+
+<li
+  class={cn(
+    'bg-primary inline-block py-0.5 px-1.5 lowercase font-medium text-white dark:text-default rounded text-xs',
+    className
+  )}
+>
+  {text}
+</li>

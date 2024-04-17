@@ -1,0 +1,46 @@
+---
+import StepFeatures from '@/components/portfolio/ui/StepFeatures.astro'
+
+// <li>Contributed to open-source projects, providing bug fixes and feature enhancements.</li>
+
+const items = [
+  {
+    title: `<span class="text-sm font-medium text-primary">2022 - Present</span>
+            <br /> 
+            Independent Developer 
+            <br />
+            <span class="font-normal text-lg">Self-Employed</span>`,
+    description: `<ul class="ml-4 list-disc text-muted">
+                    <li>Mastered full-stack web development through self-directed learning and online courses.</li>
+                    <li>Designed, developed, and deployed multiple web applications, focusing on responsive design and user experience.</li>                    
+                    <li>Regularly updated technical knowledge and skills by following industry news, attending webinars, and participating in coding challenges.</li>                  
+                    <li>Collaborated with clients to identify their needs and delivered custom solutions that enhanced their online presence.</li>
+                    <li>Managed project timelines and client expectations to ensure successful project completion.</li>
+                    <li>Stayed ahead of web technology trends to advise clients on best practices and innovative solutions.</li>
+                  </ul>`,
+    icon: 'tabler:briefcase',
+  },
+  {
+    title: `<span class="text-sm font-medium text-primary">2021 - Present</span>
+       <br /> 
+       Process Assistant (III) 
+       <br /> 
+       <span class="font-normal text-lg">Amazon, Chattanooga, TN</span>`,
+    description: `<ul class="ml-4 list-disc text-muted">
+                    <li>Oversee operations and a team of 100 employees, ensuring efficient process flow. </li>
+                    <li> Utilize strong problem-solving skills to address and resolve workflow issues. </li>
+                    <li> Implement strategies to meet daily performance targets and improve productivity.</li>
+                    <li> Train and mentor new staff, fostering a collaborative team environment.</li>
+                  </ul>`,
+    icon: 'tabler:briefcase',
+  },
+]
+---
+
+<StepFeatures
+  id="experience"
+  tagline="Experience"
+  title="Places I've Worked"
+  items={items}
+  classes={{ container: 'max-w-5xl', items: { container: 'max-w-3xl' } }}
+/>

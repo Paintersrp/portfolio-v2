@@ -1,0 +1,39 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import { cn } from '@/utils/utils'
+
+interface Classes {
+  list?: string
+  link?: string
+  icon?: string
+  text?: string
+}
+
+interface Props {
+  icon: string
+  text: string
+  href: string
+  classes?: Classes
+}
+
+const { icon, text, href, classes } = Astro.props
+---
+
+<li
+  class={cn(
+    'not-prose bg-primary inline-block rounded-md hover:bg-primary-hover hover:dark:bg-primary-hover transition-colors sine',
+    classes?.list
+  )}
+>
+  <a
+    {href}
+    class={cn(
+      'flex items-center py-2 px-3 font-medium text-white dark:text-default text-base',
+      classes?.link
+    )}
+  >
+    <Icon name={icon} class={cn('size-5 mr-1', classes?.icon)} />
+    <span class={classes?.text}>{text}</span>
+  </a>
+</li>

@@ -1,0 +1,39 @@
+---
+import BlogCard from '@/components/blog/ui/BlogCard.astro'
+import HeadlinedSection from '@/components/ui/HeadlinedSection.astro'
+import { findLatestPosts } from '@/utils/blog'
+import { BLOG_PATH } from '@/utils/paths'
+
+interface Props {
+  count?: number
+}
+
+const { count = 3 } = Astro.props
+
+const posts = await findLatestPosts({ count })
+---
+
+<HeadlinedSection
+  id="latest"
+  tagline="Latest Posts"
+  title="Things I've Written"
+  classes={{
+    section: 'max-w-5xl mx-auto',
+    headline: {
+      container: 'text-left',
+      title: 'text-3xl lg:text-4xl',
+    },
+  }}
+>
+  <a
+    class="text-muted hover:dark:text-primary-hover hover:text-primary-hover mb-6 lg:mb-0 text-base"
+    href={BLOG_PATH}
+    slot="subtitle"
+  >
+    View all posts »
+  </a>
+
+  <div class="grid gap-4 row-gap-4 md:grid-cols-2 lg:grid-cols-2 -mb-6">
+    {posts.map((post) => <BlogCard post={post} />)}
+  </div>
+</HeadlinedSection>

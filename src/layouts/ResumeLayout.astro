@@ -1,0 +1,86 @@
+---
+import '@/assets/styles/resume.css'
+import '@fontsource/poppins'
+
+import Back from '@/components/layout/Back.astro'
+import Download from '@/components/layout/Download.astro'
+import { ToggleTheme } from '@/components/ui/ToggleTheme'
+import Layout from '@/layouts/Layout.astro'
+import { HOME_PATH } from '@/utils/paths'
+
+interface Frontmatter {
+  title: string
+  pdfLink: string
+  noIndex?: boolean
+  description?: string
+  robots: {
+    index: boolean
+    follow: boolean
+  }
+}
+
+interface Props {
+  frontmatter: Frontmatter
+}
+
+const { PDF_VIEW } = import.meta.env
+// const PDF_VIEW = true
+
+const { frontmatter } = Astro.props as Props
+const { title, pdfLink, description, robots } = frontmatter
+
+const initials = title
+  .split(' ')
+  .map(([initial]) => initial!.toUpperCase())
+  .slice(0, 3)
+
+const metadata = { title, description, robots }
+
+// TODO Back Button
+// TODO Theme Button
+// TODO Theme on Download?
+---
+
+<Layout metadata={metadata}>
+  <main class={!PDF_VIEW ? 'bg-indigo-50 dark:bg-slate-900' : ''}>
+    <div class="container mx-auto flex justify-center">
+      <article class="resume relative">
+        <!-- Initials -->
+        <div
+          class="absolute top-4 rounded-sm bg-primary text-white dark:text-heading px-4 py-1 sm:left-8 sm:top-12"
+        >
+          <div class="flex h-fit select-none flex-col items-center text-sm font-bold">
+            {initials.map((initial) => <span>{initial}</span>)}
+          </div>
+        </div>
+
+        <!-- Download Button -->
+        {
+          !PDF_VIEW && (
+            <div class="absolute right-4 top-4 flex gap-3 items-center">
+              <Download href={pdfLink} />
+              <ToggleTheme
+                classes={{
+                  button: 'size-6 text-muted hover:text-primary',
+                  icon: 'size-6 md:size-5',
+                }}
+                client:idle
+              />
+            </div>
+          )
+        }
+
+        {
+          !PDF_VIEW && (
+            <div class="absolute left-4 top-4">
+              <Back href={HOME_PATH} />
+            </div>
+          )
+        }
+
+        <!-- Content -->
+        <slot />
+      </article>
+    </div>
+  </main>
+</Layout>

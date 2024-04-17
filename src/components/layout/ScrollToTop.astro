@@ -1,0 +1,67 @@
+<button
+  aria-label="Back to Top"
+  class="z-90 fixed bottom-4 end-4 sm:end-8 flex size-7 translate-y-28 items-center justify-center rounded-md border-2 border-transparent bg-primary hover:bg-primary-hover text-white text-3xl opacity-0 transition-all duration-300 data-[show=true]:translate-y-0 data-[show=true]:opacity-100"
+  data-show="false"
+  id="to-top-btn"
+>
+  <svg
+    aria-hidden="true"
+    class="size-4 sm:size-5"
+    fill="none"
+    focusable="false"
+    stroke="currentColor"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M4.5 15.75l7.5-7.5 7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+  </svg>
+</button>
+
+<script>
+  let lastKnownScrollPositionButton = window.scrollY
+  let tickingButton = true
+
+  function applyButtonClick() {
+    const scrollBtn = document.getElementById('to-top-btn') as HTMLButtonElement
+
+    scrollBtn.addEventListener('click', () => {
+      document.documentElement.scrollTo({ behavior: 'smooth', top: 0 })
+    })
+  }
+
+  function applyButtonStylesOnScroll() {
+    const scrollBtn = document.getElementById('to-top-btn') as HTMLButtonElement
+    const shouldShow = lastKnownScrollPositionButton > 60 && scrollBtn.dataset.show === 'false'
+    const shouldHide = lastKnownScrollPositionButton <= 60 && scrollBtn.dataset.show === 'true'
+
+    if (shouldShow) {
+      scrollBtn.dataset.show = 'true'
+    } else if (shouldHide) {
+      scrollBtn.dataset.show = 'false'
+    }
+
+    tickingButton = false
+  }
+
+  function adjustButtonOnScroll() {
+    lastKnownScrollPositionButton = window.scrollY
+
+    if (!tickingButton) {
+      window.requestAnimationFrame(() => {
+        applyButtonStylesOnScroll()
+      })
+      tickingButton = true
+    }
+  }
+
+  document.addEventListener('astro:after-swap', () => {
+    document.addEventListener('scroll', adjustButtonOnScroll)
+    applyButtonStylesOnScroll()
+    applyButtonClick()
+  })
+
+  document.addEventListener('scroll', adjustButtonOnScroll)
+  applyButtonStylesOnScroll()
+  applyButtonClick()
+</script>

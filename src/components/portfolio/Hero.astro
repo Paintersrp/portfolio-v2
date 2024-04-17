@@ -1,0 +1,34 @@
+---
+import HeroBase from '@/components/portfolio/ui/HeroBase.astro'
+
+import type { Action } from '@/types/site'
+
+// TODO Fix Contact Button href
+// TODO Rewrite Subtitle
+
+const actions: Action[] = [
+  {
+    variant: 'primary',
+    text: 'Contact me',
+    href: 'mailto:paintersrp@gmail.com',
+    target: '_blank',
+  },
+  { text: 'View resume', href: '/resume' },
+]
+---
+
+<HeroBase id="hero" class="pt-[72px]" {actions}>
+  <Fragment slot="title">
+    Hello ! My name is
+    <br />
+    <span class="text-primary dark:text-primary highlight"> Ryan Painter.</span>
+  </Fragment>
+
+  <Fragment slot="subtitle">
+    Lorem ipsum dolor sit amet
+    <span class="font-medium text-accent">consectetur</span>, adipisicing elit. Totam mollitia
+    cupiditate praesentium culpa voluptatibus. Totam quasi, molestiae
+    <span class="font-medium text-accent">quaerat</span>
+    in eaque vero repudiandae.
+  </Fragment>
+</HeroBase>

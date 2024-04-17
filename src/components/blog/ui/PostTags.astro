@@ -1,0 +1,41 @@
+---
+import { cn } from '@/utils/utils'
+
+import type { Post } from '@/types/site'
+
+interface Props {
+  tags: Post['tags']
+  class?: string
+  title?: string | undefined
+  isCategory?: boolean
+}
+
+const { tags, class: className = 'text-sm', title = undefined, isCategory = false } = Astro.props
+---
+
+{
+  tags && Array.isArray(tags) && (
+    <>
+      {title !== undefined && (
+        <div class="mb-1">
+          <span class="align-super font-normal underline underline-offset-4 decoration-1">
+            {title}
+          </span>
+        </div>
+      )}
+
+      <ul class={cn('flex', className)}>
+        {tags.map((tag) => (
+          <li class="lowercase font-medium text-white dark:text-heading">
+            <a
+              class="bg-primary hover:bg-primary-hover mr-2 mb-2 py-1 px-2 rounded sine"
+              href={`/blog/${isCategory ? 'categories' : 'tags'}/${tag}`}
+            >
+              {tag}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}

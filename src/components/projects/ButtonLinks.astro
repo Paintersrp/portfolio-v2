@@ -1,0 +1,31 @@
+---
+import ButtonLink from '@/components/projects/ButtonLink.astro'
+import { cn } from '@/utils/utils'
+
+interface Item {
+  href: string
+  icon: string
+  text: string
+}
+
+interface Classes {
+  container?: string
+  item: {
+    container?: string
+    link?: string
+    icon?: string
+    text?: string
+  }
+}
+
+export interface Props {
+  items: Item[]
+  classes?: Classes
+}
+
+const { items, classes } = Astro.props
+---
+
+<div class={cn('flex gap-2', classes?.container)}>
+  {items.map((item) => <ButtonLink {...item} classes={classes?.item} />)}
+</div>

@@ -1,0 +1,42 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import Button from '@/components/ui/Button.astro'
+import { getLink } from '@/utils/paths'
+import { cn } from '@/utils/utils'
+
+interface Props {
+  prevUrl?: string
+  nextUrl?: string
+  prevText?: string
+  nextText?: string
+}
+
+const { prevUrl, nextUrl, prevText = 'Previous', nextText = 'Next' } = Astro.props
+---
+
+{
+  (prevUrl || nextUrl) && (
+    <div class="container flex">
+      <div class="flex flex-row mx-auto container justify-between">
+        <Button
+          variant="primary"
+          class={cn('px-2 py-1 text-sm', !prevUrl && 'invisible')}
+          href={getLink(prevUrl!)}
+        >
+          <Icon name="tabler:chevron-left" class="size-5" />
+          <p>{prevText}</p>
+        </Button>
+
+        <Button
+          variant="primary"
+          class={cn('px-2 py-1 text-sm', !nextUrl && 'invisible')}
+          href={getLink(nextUrl!)}
+        >
+          <p>{nextText}</p>
+          <Icon name="tabler:chevron-right" class="size-5" />
+        </Button>
+      </div>
+    </div>
+  )
+}

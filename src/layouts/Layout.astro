@@ -1,0 +1,45 @@
+---
+import '@/assets/styles/global.css'
+import '@/assets/styles/tailwind.css'
+
+import { ViewTransitions } from 'astro:transitions'
+
+import { I18N } from '@/config'
+import GeneralHead from '@/components/layout/GeneralHead.astro'
+import InitScripts from '@/components/layout/InitScripts.astro'
+import Metadata from '@/components/layout/Metadata.astro'
+import ScrollToTop from '@/components/layout/ScrollToTop.astro'
+import Tokens from '@/components/layout/Tokens.astro'
+
+import type { MetadataConfig } from '@/types/site'
+
+export interface Props {
+  metadata?: MetadataConfig
+}
+
+const { metadata = {} } = Astro.props
+const { language, textDirection } = I18N
+---
+
+<!doctype html>
+<html lang={language} dir={textDirection}>
+  <head>
+    <GeneralHead />
+    <Metadata {...metadata} />
+    <Tokens />
+    <ViewTransitions />
+  </head>
+
+  <body class="antialiased text-default bg-page tracking-tight">
+    <ScrollToTop />
+    <slot />
+
+    <InitScripts />
+
+    <style is:global>
+      img {
+        content-visibility: auto;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<script is:inline define:vars={{ defaultTheme: 'system' }}>
+  if (window.basic_script) {
+    return
+  }
+
+  window.basic_script = true
+
+  const initTheme = function () {
+    if (
+      localStorage.theme === 'dark' ||
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }
+
+  const onPageShow = function () {
+    document.documentElement.classList.add('motion-safe:scroll-smooth')
+    const elem = document.querySelector('[data-menu-toggle]')
+
+    if (elem) {
+      elem.classList.remove('expanded')
+    }
+
+    document.body.classList.remove('overflow-hidden')
+    document.getElementById('header')?.classList.remove('h-screen')
+    document.getElementById('header')?.classList.remove('expanded')
+    document.querySelector('#header nav')?.classList.add('hidden')
+  }
+
+  initTheme()
+  window.onpageshow = onPageShow
+
+  document.addEventListener('astro:after-swap', () => {
+    initTheme()
+    onPageShow()
+  })
+</script>

@@ -1,0 +1,47 @@
+---
+import BlogCard from '@/components/blog/ui/BlogCard.astro'
+import { BLOG_PATH } from '@/utils/paths'
+
+import type { Post } from '@/types/site'
+
+interface Props {
+  title?: string
+  linkText?: string
+  information?: string
+  posts: Post[]
+}
+
+const {
+  title = await Astro.slots.render('title'),
+  linkText = 'View all posts',
+  information = await Astro.slots.render('information'),
+  posts,
+} = Astro.props
+---
+
+<div class="flex flex-col lg:justify-between lg:flex-row mb-8">
+  {
+    title && (
+      <div class="md:max-w-sm">
+        <h2
+          class="text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none group font-heading mb-2"
+          set:html={title}
+        />
+        {linkText && BLOG_PATH && (
+          <a
+            class="text-muted hover:text-primary transition ease-in duration-200 block mb-6 lg:mb-0"
+            href={BLOG_PATH}
+          >
+            {linkText} »
+          </a>
+        )}
+      </div>
+    )
+  }
+
+  {information && <p class="text-muted lg:text-sm lg:max-w-md" set:html={information} />}
+</div>
+
+<div class="grid gap-6 row-gap-5 md:grid-cols-2 lg:grid-cols-3 -mb-6">
+  {posts.map((post) => <BlogCard post={post} />)}
+</div>

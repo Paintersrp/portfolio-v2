@@ -1,0 +1,27 @@
+---
+import Headline from '@/components/ui/Headline.astro'
+import Section from '@/components/ui/Section.astro'
+
+import type { HeadlinedSectionProps } from '@/types/site'
+
+const {
+  id,
+  as = 'section',
+  isDark = false,
+
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline = await Astro.slots.render('tagline'),
+  classes,
+} = Astro.props as HeadlinedSectionProps
+---
+
+<Section {id} {as} {isDark} class={classes?.section}>
+  {
+    (title || subtitle || tagline) && (
+      <Headline title={title} subtitle={subtitle} tagline={tagline} classes={classes?.headline} />
+    )
+  }
+
+  <slot />
+</Section>

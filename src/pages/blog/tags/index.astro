@@ -1,0 +1,64 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import Headline from '@/components/blog/ui/BlogHeadline.astro'
+import ContentTypeItem from '@/components/blog/ui/ContentTypeItem.astro'
+import Layout from '@/layouts/PageLayout.astro'
+import { fetchCounts } from '@/utils/blog'
+import { getTags } from '@/utils/tags'
+
+export const prerender = true
+
+const tags = await getTags()
+const { tags: counts } = await fetchCounts()
+
+const metadata = {
+  title: `SRP Blog — Tag List`,
+  robots: {
+    index: true,
+    follow: true,
+  },
+}
+---
+
+<Layout metadata={metadata} showRssFeed>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline>Browse Tags</Headline>
+
+    <div
+      class="mb-4 md:mb-8 flex flex-row gap-2 font-bold text-heading justify-center items-center"
+    >
+      <div class="flex items-center">
+        <Icon name="tabler:article" class="size-5 md:size-6 mr-1 md:mr-2 text-primary" />
+        <a class="underline-link text-sm md:text-xl font-normal" href="/blog">Browse all Posts</a>
+      </div>
+
+      ·
+
+      <div class="flex items-center">
+        <Icon name="tabler:category" class="size-5 md:size-6 mr-1 md:mr-2 text-primary" />
+        <a class="underline-link text-sm md:text-xl font-normal" href="/blog/categories">
+          Browse by Categories
+        </a>
+      </div>
+    </div>
+
+    <ul class="grid md:grid-cols-3 gap-6 md:gap-8">
+      {
+        tags.map((tag) => (
+          <li class="rounded-md">
+            <ContentTypeItem
+              item={tag}
+              type="tags"
+              count={counts.get(tag.slug)}
+              classes={{
+                header: 'pt-1',
+                description: 'text-base',
+              }}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>

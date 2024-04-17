@@ -1,0 +1,90 @@
+---
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+
+import PostTags from '@/components/blog/ui/PostTags.astro'
+
+import { fetchCounts } from '@/utils/blog'
+import { getFormattedDate } from '@/utils/utils'
+
+import type { Post } from '@/types/site'
+
+interface Props {
+  post: Post
+}
+
+const { categories: counts } = await fetchCounts()
+const { post } = Astro.props
+
+const href = `/${post.permalink}`
+---
+
+<article
+  class={`max-w-md mx-auto md:max-w-none grid gap-6 md:gap-8 ${post.image ? 'md:grid-cols-2' : ''}`}
+>
+  {
+    post.image && (
+      <a class="relative block group" {href}>
+        <div class="relative h-0 pb-[56.25%] md:pb-[75%] md:h-64 lg:pb-[56.25%] overflow-hidden rounded shadow-lg">
+          {post.image && (
+            <Image
+              src={post.image}
+              class="absolute inset-0 object-cover w-full h-full mb-6 rounded shadow-lg"
+              widths={[400, 900]}
+              width={900}
+              height={300}
+              sizes="(max-width: 900px) 400px, 900px"
+              alt={post.title}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+        </div>
+      </a>
+    )
+  }
+
+  <div>
+    <header>
+      <div class="mb-1">
+        <span class="text-sm text-muted">
+          <Icon name="tabler:clock-filled" class="size-4 inline-block -mt-0.5 text-primary" />
+          <time datetime={String(post.publishDate)} class="inline-block mr-0.5">
+            {getFormattedDate(post.publishDate)}
+          </time>
+
+          {
+            post.category && (
+              <>
+                ·
+                <Icon
+                  name="tabler:category-filled"
+                  class="size-4 inline-block -mt-0.5 ml-0.5 text-primary"
+                />
+                <a class="capitalize underline-link" href={`/blog/categories/${post.category}`}>
+                  {post.category.replaceAll('-', ' ')} ({counts.get(post.category)})
+                </a>
+              </>
+            )
+          }
+        </span>
+      </div>
+      <h2 class="text-xl sm:text-2xl font-semibold leading-tight mb-2 font-heading text-heading">
+        {
+          href ? (
+            <a class="hover:text-primary" {href}>
+              {post.title}
+            </a>
+          ) : (
+            post.title
+          )
+        }
+      </h2>
+    </header>
+
+    {post.excerpt && <p class="flex-grow text-muted text-lg">{post.excerpt}</p>}
+    <footer class="mt-5">
+      <PostTags tags={post.tags} />
+    </footer>
+  </div>
+</article>

@@ -1,0 +1,52 @@
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+article.resume {
+  @apply prose m-0
+      max-w-fit bg-white px-12 py-8 pt-20 dark:prose-invert 
+      prose-h1:text-3xl prose-h1:uppercase prose-h2:mb-0 prose-h2:mt-8 prose-h2:text-lg
+      prose-h2:uppercase prose-h2:text-muted
+      prose-h3:mb-3 prose-h3:mt-3 prose-h3:text-xl prose-h3:uppercase prose-h4:mb-3 prose-hr:mb-0
+      prose-h4:mt-4 prose-h4:text-sm prose-h4:text-muted prose-h4:font-medium prose-p:my-2
+      prose-p:text-sm prose-p:leading-6 prose-a:font-normal prose-a:no-underline prose-a:transition-colors
+      prose-li:text-sm prose-table:mt-0 prose-thead:border-0
+      prose-th:p-0 prose-th:font-medium prose-td:p-1.5
+      prose-td:text-muted
+      dark:bg-slate-800
+      prose-h4:dark:text-muted  
+      sm:px-24 sm:py-14
+      lg:max-w-4xl;
+}
+
+.prose-a\:font-normal :is(:where(a):not(:where([class~='not-prose'], [class~='not-prose'] *))) {
+  position: relative;
+  display: inline-block;
+}
+
+.prose-a\:font-normal
+  :is(:where(a):not(:where([class~='not-prose'], [class~='not-prose'] *))):after {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--primary);
+  content: '';
+  opacity: 0;
+  transition:
+    height 0.3s,
+    opacity 0.3s,
+    transform 0.3s;
+  transform: translateY(-4px);
+}
+
+.prose-a\:font-normal
+  :is(:where(a):not(:where([class~='not-prose'], [class~='not-prose'] *))):focus:after,
+.prose-a\:font-normal
+  :is(:where(a):not(:where([class~='not-prose'], [class~='not-prose'] *))):hover:after {
+  height: 2px;
+  border-radius: 3px;
+  opacity: 1;
+  transform: translateY(0px);
+}

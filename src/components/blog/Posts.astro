@@ -1,0 +1,31 @@
+---
+import BlogCards from '@/components/blog/ui/BlogCards.astro'
+import Section from '@/components/ui/Section.astro'
+import { findPostsByIds } from '@/utils/blog'
+
+import type { SectionProps } from '@/types/site'
+
+interface Props extends SectionProps {
+  title?: string
+  linkText?: string
+  information?: string
+  postIds: string[]
+}
+
+const {
+  title = await Astro.slots.render('title'),
+  linkText = 'View all posts',
+  information = await Astro.slots.render('information'),
+  postIds = [],
+
+  id,
+  isDark = false,
+  class: className = {},
+} = Astro.props
+
+const posts = await findPostsByIds(postIds)
+---
+
+<Section id={id} isDark={isDark} class={className}>
+  <BlogCards {title} {linkText} {information} {posts} />
+</Section>

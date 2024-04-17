@@ -1,0 +1,90 @@
+---
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+
+import PostTags from '@/components/blog/ui/PostTags.astro'
+
+import { getCategoryLink } from '@/utils/paths'
+import { getFormattedDate } from '@/utils/utils'
+
+import type { Post } from '@/types/site'
+
+interface Props {
+  post: Post
+}
+
+const { post } = Astro.props
+const { Content } = post
+---
+
+<section class="py-8 sm:py-16 lg:py-20 mx-auto">
+  <article>
+    <header>
+      <div
+        class="flex justify-between flex-col sm:flex-row max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6 sm:items-center"
+      >
+        <p>
+          <Icon name="tabler:clock" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
+          <time datetime={String(post.publishDate)} class="inline-block">
+            {getFormattedDate(post.publishDate)}
+          </time>
+
+          {
+            post.category && (
+              <>
+                {' '}
+                ·{' '}
+                <a
+                  class="capitalize hover:underline inline-block"
+                  href={getCategoryLink(post.category)}
+                >
+                  {post.category.replaceAll('-', ' ')}
+                </a>
+              </>
+            )
+          }
+          {post.readingTime && <> · {post.readingTime} min read</>}
+        </p>
+      </div>
+
+      <h1
+        class="px-4 sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading"
+      >
+        {post.title}
+      </h1>
+      <p
+        class="max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-muted"
+      >
+        {post.excerpt}
+      </p>
+
+      {
+        post.image ? (
+          <Image
+            src={post.image}
+            class="lg:max-w-[720px] mx-auto mb-6 sm:rounded-md"
+            widths={[400, 720]}
+            sizes="(max-width: 720px) 400px, 720px"
+            alt={post?.excerpt || ''}
+            width={720}
+            height={506}
+            loading="eager"
+            decoding="async"
+          />
+        ) : (
+          <div class="max-w-3xl mx-auto px-4 sm:px-6">
+            <div class="border-t dark:border-border" />
+          </div>
+        )
+      }
+    </header>
+    <div
+      class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert text-muted dark:prose-headings:text-heading prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-primary prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px] border-border"
+    >
+      {Content ? <Content /> : <Fragment set:html={post.content || ''} />}
+    </div>
+    <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-8">
+      <PostTags tags={post.tags} class="mr-5 rtl:mr-0 rtl:ml-5" />
+    </div>
+  </article>
+</section>

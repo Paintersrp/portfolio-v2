@@ -1,0 +1,45 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import { getAsset } from '@/utils/paths'
+import { cn } from '@/utils/utils'
+
+interface Classes {
+  container: string
+  link: string
+  icon: string
+}
+
+interface Props {
+  classes?: Classes
+}
+
+const { classes } = Astro.props
+
+const socials = [
+  { ariaLabel: 'X', icon: 'tabler:brand-x', href: '#' },
+  { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
+  { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
+  { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
+  { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/Paintersrp' },
+]
+---
+
+<ul class={cn('flex mb-4 md:order-1 -ml-3 md:mb-0 justify-center gap-1', classes?.container)}>
+  {
+    socials.map(({ ariaLabel, href, icon }) => (
+      <li>
+        <a
+          class={cn(
+            'text-muted hover:text-white hover:bg-primary dark:hover:bg-primary focus:outline-none focus:ring-4 focus:ring-primary dark:focus:ring-primary rounded-lg text-sm p-2.5 inline-flex items-center sine',
+            classes?.link
+          )}
+          aria-label={ariaLabel}
+          href={href}
+        >
+          {icon && <Icon name={icon} class={cn('size-5', classes?.icon)} />}
+        </a>
+      </li>
+    ))
+  }
+</ul>

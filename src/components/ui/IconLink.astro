@@ -1,0 +1,29 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import { cn } from '@/utils/utils'
+
+interface Classes {
+  container?: string
+  icon?: string
+}
+
+interface Props {
+  href: string
+  icon: string
+  classes?: Classes
+}
+
+const { classes, href, icon } = Astro.props
+---
+
+<a
+  type="button"
+  class={cn(
+    'text-heading inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none size-8 hover:bg-primary hover:text-white sine',
+    classes?.container
+  )}
+  {href}
+>
+  <Icon name={icon} class={cn('size-5', classes?.icon)} />
+</a>

@@ -1,0 +1,21 @@
+---
+import ListItem from '@/components/blog/ui/ListItem.astro'
+
+import type { Post } from '@/types/site'
+
+interface Props {
+  posts: Post[]
+}
+
+const { posts } = Astro.props
+---
+
+<ul>
+  {
+    posts.map((post) => (
+      <li class="mb-12 md:mb-20">
+        <ListItem post={post} />
+      </li>
+    ))
+  }
+</ul>

@@ -1,0 +1,36 @@
+---
+import StepFeatures from '@/components/portfolio/ui/StepFeatures.astro'
+
+const items = [
+  {
+    title: `<span class="text-sm font-medium text-primary">2022 - Present</span>
+            <br />
+            Comprehensive Web Development Studies`,
+    description: `<ul class="ml-4 list-disc text-muted">
+                    <li>Undertook an intensive, self-guided study of modern web development technologies and frameworks.</li>
+                    <li>Acquired proficiency in HTML, CSS, JavaScript, and various backend technologies through hands-on project work.</li>
+                    <li>Developed a portfolio of projects showcasing a wide range of skills from static websites to dynamic web applications demonstrating skills in front-end, back-end, and full-stack development.</li>
+                  </ul>`,
+    icon: 'tabler:device-desktop',
+  },
+  {
+    title: `<span class="text-sm font-medium text-primary">2023 - Present</span>
+            <br /> 
+            Continuous Learning & Community Engagement`,
+    description: `<ul class="ml-4 list-disc text-muted">
+                    <li>Refined coding abilities and algorithmic thinking through consistent practice on platforms such as LeetCode.</li>             
+                    <li>Dedicated to lifelong learning, regularly attending webinars and workshops to stay updated with the latest industry trends.</li>
+                    <li>Committed to ongoing learning and professional growth within the developer community.</li>
+                  </ul>`,
+    icon: 'tabler:users',
+  },
+]
+---
+
+<StepFeatures
+  id="education"
+  tagline="Education"
+  title="Places I've Studied"
+  items={items}
+  classes={{ container: 'max-w-5xl', items: { container: 'max-w-3xl' } }}
+/>

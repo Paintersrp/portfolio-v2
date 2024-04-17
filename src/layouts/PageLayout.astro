@@ -1,0 +1,46 @@
+---
+import Footer from '@/components/layout/Footer.astro'
+import Header from '@/components/layout/Header.astro'
+import Layout from '@/layouts/Layout.astro'
+import { BLOG_PATH, CATEGORY_PATH, TAG_PATH } from '@/utils/paths'
+
+import type { MetadataConfig } from '@/types/site'
+
+interface Props {
+  metadata?: MetadataConfig
+  showRssFeed?: boolean
+}
+
+const { metadata, showRssFeed = false } = Astro.props
+
+const headerData = {
+  links: [
+    { text: 'About', href: '/#about' },
+    { text: 'Experience', href: '/#experience' },
+    { text: 'Education', href: '/#education' },
+    { text: 'Projects', href: '/#projects' },
+    { text: 'Resume', href: '/resume' },
+    {
+      text: 'Blog',
+      links: [
+        { text: 'Browse Posts', href: BLOG_PATH },
+        { text: 'Browse Categories', href: CATEGORY_PATH },
+        { text: 'Browse Tags', href: TAG_PATH },
+      ],
+    },
+  ],
+  actions: [],
+}
+---
+
+<Layout metadata={metadata}>
+  <slot name="header">
+    <Header position="left" {...headerData} {showRssFeed} isSticky showToggleTheme />
+  </slot>
+  <main>
+    <slot />
+  </main>
+  <slot name="footer">
+    <Footer />
+  </slot>
+</Layout>

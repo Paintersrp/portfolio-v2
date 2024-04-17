@@ -1,0 +1,19 @@
+---
+import { Icon } from 'astro-icon/components'
+
+interface Props {
+  icon: string
+  text: string
+}
+
+const { icon, text } = Astro.props
+---
+
+<li
+  class="bg-primary inline-block py-1 px-1.5 font-medium text-white dark:text-default rounded text-xs"
+>
+  <div class="flex gap-1 items-center">
+    <Icon name={icon} class="size-[1.1rem]" />
+    {text}
+  </div>
+</li>

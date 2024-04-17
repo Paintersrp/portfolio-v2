@@ -1,0 +1,92 @@
+---
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+
+import { getFormattedDate } from '@/utils/utils'
+
+import type { Project } from '@/types/site'
+
+interface Props {
+  project: Project
+}
+
+const { project } = Astro.props
+const { Content } = project
+
+// todo Github Stars / Info from API?
+---
+
+<section class="py-8 sm:py-16 lg:py-20 mx-auto max-w-3xl">
+  <article>
+    <header>
+      <div class="flex items-center gap-1 max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6">
+        <Icon name="tabler:clock-filled" class="size-4 text-primary inline-block -mt-0.5" />
+        <div>
+          <p class="text-sm flex items-center gap-1 font-medium">
+            Published:
+            <time datetime={String(project.startDate)} class="inline-block">
+              {getFormattedDate(project.startDate)}
+            </time>
+
+            {
+              project.modifiedDate && (
+                <span class="">(Updated: {getFormattedDate(project.modifiedDate)})</span>
+              )
+            }
+          </p>
+        </div>
+      </div>
+
+      <h1
+        class="px-4 sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading"
+      >
+        {project.title}
+      </h1>
+
+      <p
+        class="max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-muted"
+      >
+        {project.description}
+      </p>
+
+      {
+        project.image && (
+          <Image
+            src={project.image}
+            class="lg:max-w-[720px] mx-auto mb-6 sm:rounded-md"
+            widths={[400, 720]}
+            sizes="(max-width: 720px) 400px, 720px"
+            alt={project?.description || ''}
+            width={720}
+            height={506}
+            loading="eager"
+            decoding="async"
+          />
+        )
+      }
+
+      <div class="flex gap-1 flex-col text-center my-4 px-4 sm:px-6 text-default">
+        <h2 class="font-bold leading-tighter tracking-tighter font-heading text-heading text-2xl">
+          Stack
+        </h2>
+
+        <ul class="flex flex-row gap-4 justify-center">
+          {
+            project.stack.map((item) => (
+              <li class="flex items-center">
+                <Icon name={item.icon} class="size-6 text-primary" />
+                <span class="ml-2 text-sm font-medium">{item.text}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </header>
+
+    <div
+      class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert text-muted dark:prose-headings:text-heading prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-primary prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px] border-border"
+    >
+      {Content ? <Content /> : <Fragment set:html={project.content || ''} />}
+    </div>
+  </article>
+</section>

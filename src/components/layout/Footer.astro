@@ -1,0 +1,23 @@
+---
+import Socials from '@/components/ui/Socials.astro'
+import { SITE } from '@/config'
+import { HOME_PATH } from '@/utils/paths'
+---
+
+<footer class="border-t border-border flex items-center justify-center w-full">
+  <div class="relative max-w-5xl mx-auto px-4 sm:px-6 dark:text-heading">
+    <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
+      <div class="col-span-12">
+        <div class="flex justify-center">
+          <div class="mb-2 text-sm text-heading">
+            <a class="inline-block underline-link mx-0.25" href={HOME_PATH}>
+              Designed and built by {SITE?.name}
+            </a>
+          </div>
+        </div>
+
+        <Socials />
+      </div>
+    </div>
+  </div>
+</footer>

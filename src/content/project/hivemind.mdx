@@ -1,0 +1,101 @@
+---
+title: 'Hivemind - A Reddit Clone'
+description: 'Hivemind is a community-driven platform where discussions and content sharing come to life. Built as a Reddit clone, it leverages modern web technologies to deliver a seamless and scalable user experience.'
+githubUrl: 'https://www.github.com/Paintersrp/reddit-clone'
+liveUrl: 'https://hivemind-srp.vercel.app/'
+startDate: 2024-03-06T00:00:00Z
+deployDate: 2024-03-06T00:00:00Z
+modifiedDate: 2024-03-06T00:00:00Z
+metadata:
+  canonical: 'https://srp.vercel.app/p/hivemind'
+stack:
+  - icon: 'tabler:brand-nextjs'
+    text: 'NextJS'
+  - icon: 'tabler:brand-aws'
+    text: 'AWS'
+  - icon: 'tabler:brand-mysql'
+    text: 'MySQL'
+  - icon: 'tabler:brand-prisma'
+    text: 'Prisma'
+---
+
+import RoadmapList from '@/components/projects/RoadmapList.astro'
+import ButtonLinks from '@/components/projects/ButtonLinks.astro'
+
+### Overview
+
+Hivemind is an innovative platform designed to mirror the dynamic and diverse nature of Reddit's community interaction. This project is a testament to the collaborative spirit of the internet, offering a space where users can convene to discuss, debate, and disseminate information. With a focus on user-friendly design and robust functionality, Hivemind stands as a modern interpretation of a forum, enhanced by the latest advancements in web development.
+
+The backbone of Hivemind is its tech stack, which includes NextJS for server-side rendering and static site generation, AWS for scalable cloud infrastructure, MySQL for a reliable database solution, and Prisma for efficient database management. This combination ensures a resilient and flexible architecture that can handle the ebb and flow of community engagement.
+
+From the onset, the goal was to create a platform that not only allows for the exchange of ideas but also encourages the growth of a community. Each feature of Hivemind, from thread creation to comment threading, has been meticulously crafted to foster an environment where conversations can thrive.
+
+As the developer behind Hivemind, I have poured countless hours into ensuring that each line of code not only functions but also contributes to the greater user experience. This portfolio piece showcases my dedication to the craft of web development and my commitment to creating spaces that bring people together.
+
+### Roadmap
+
+<RoadmapList
+  items={[
+    {
+      text: 'Set up project structure',
+      status: 'complete',
+    },
+    {
+      text: 'Configure TypeScript and ESLint',
+      status: 'complete',
+    },
+    {
+      text: 'Implement basic layout components',
+      status: 'complete',
+    },
+    {
+      text: 'Create database schema',
+      status: 'complete',
+    },
+    {
+      text: 'Develop user authentication system',
+      status: 'complete',
+    },
+    {
+      text: 'Build post creation and editing features',
+      status: 'complete',
+    },
+    {
+      text: 'Add comment functionality',
+      status: 'complete',
+    },
+    {
+      text: 'Implement user profiles',
+      status: 'complete',
+    },
+    {
+      text: 'Optimize for performance',
+      status: 'complete',
+    },
+    {
+      text: 'Test all features',
+      status: 'complete',
+    },
+    {
+      text: 'Deploy to production',
+      status: 'complete',
+    },
+  ]}
+/>
+
+### Links
+
+<ButtonLinks
+  items={[
+    {
+      href: frontmatter.githubUrl,
+      icon: 'tabler:brand-github',
+      text: 'GitHub',
+    },
+    {
+      href: frontmatter.liveUrl,
+      icon: 'tabler:external-link',
+      text: 'Live',
+    },
+  ]}
+/>

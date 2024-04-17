@@ -1,0 +1,45 @@
+---
+import AboutSkills from '@/components/portfolio/ui/AboutSkills.astro'
+import HeadlinedSection from '@/components/ui/HeadlinedSection.astro'
+import Socials from '@/components/ui/Socials.astro'
+---
+
+<HeadlinedSection
+  id="about"
+  tagline="About"
+  title="Get To Know Me"
+  classes={{
+    section: 'max-w-5xl mx-auto',
+    headline: {
+      container: 'text-left',
+      title: 'text-3xl lg:text-4xl',
+    },
+  }}
+>
+  <div class={`md:flex md:gap-16`}>
+    <div class="md:basis-1/2 self-center dark:text-muted text-muted mb-4 text-lg">
+      <p>
+        In 2021, my coding journey began with a Kaggle Machine Learning challenge, sparking a deep
+        interest in Python and data analysis. This quickly expanded into a fascination with the
+        entire web development spectrum. I ventured into JavaScript/TypeScript and the NodeJS
+        ecosystem, honing my skills in API development and front-end design. Embracing frameworks
+        like React, Svelte, and Vue, I've developed a diverse and robust skill set, allowing me to
+        craft comprehensive web solutions.
+      </p>
+      <br />
+      <p>
+        When not immersed in coding, I indulge in my love for TV shows and movies, exploring various
+        genres for relaxation and inspiration. Live music and comedy also play a significant role in
+        my life, offering fresh perspectives that fuel my creativity. These interests, while
+        distinct from my professional pursuits, enrich my approach to web development, infusing it
+        with unique insights and a well-rounded outlook.
+      </p>
+
+      <Socials classes={{ container: 'justify-start mt-4 gap-2' }} />
+    </div>
+
+    <div aria-hidden="true" class="mt-10 md:mt-0 md:basis-1/2">
+      <AboutSkills />
+    </div>
+  </div>
+</HeadlinedSection>

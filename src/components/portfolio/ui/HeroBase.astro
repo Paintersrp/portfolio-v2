@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets'
+
+import Button from '@/components/ui/Button.astro'
+import { cn } from '@/utils/utils'
+
+import type { Action, HeadlinedSectionProps } from '@/types/site'
+
+type HeroType = 'column' | 'row'
+
+interface Props extends HeadlinedSectionProps {
+  actions?: Action[]
+  image?: string | any
+  type?: HeroType
+}
+
+const {
+  id,
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline,
+  actions,
+  image = await Astro.slots.render('image'),
+  type = 'column',
+  class: className,
+} = Astro.props
+
+const isRow = type === 'row'
+---
+
+<section
+  class={cn('flex md:-mt-[144px]', isRow ? 'md:-mt-[108px]' : 'md:-mt-[72px]', className)}
+  {...id ? { id } : {}}
+>
+  <div class="relative flex justify-center w-full px-4 sm:px-6 pt-0 md:pt-[76px]">
+    <!-- Hero Body -->
+    <div
+      class={cn(
+        'py-8 md:py-12 w-full max-w-[1200px]',
+        isRow ? 'lg:py-0 lg:flex lg:items-center lg:h-screen lg:gap-8' : ''
+      )}
+    >
+      <div
+        class={cn(
+          'text-center pb-10 md:pb-16 max-w-5xl mx-auto',
+          isRow ? 'basis-1/2 lg:text-left' : 'max-w-5xl'
+        )}
+      >
+        {
+          tagline && (
+            <p
+              class="text-base text-secondary dark:text-primary-200 font-bold tracking-wide uppercase"
+              set:html={tagline}
+            />
+          )
+        }
+
+        {
+          title && (
+            <h1
+              class={cn(
+                'font-bold leading-tighter tracking-tighter mb-4 font-heading text-heading dark:text-heading',
+                isRow ? 'text-2xl md:text-3xl' : 'text-5xl md:text-6xl'
+              )}
+              set:html={title}
+            />
+          )
+        }
+
+        <div class="max-w-3xl mx-auto">
+          {
+            subtitle && (
+              <p
+                class="text-xl text-muted mb-6 dark:text-muted font-normal tracking-normal"
+                set:html={subtitle}
+              />
+            )
+          }
+
+          {
+            actions && (
+              <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4">
+                {actions.map((action) => (
+                  <div class="flex w-full sm:w-auto">
+                    <Button {...(action || {})} class="w-full sm:mb-0" />
+                  </div>
+                ))}
+              </div>
+            )
+          }
+        </div>
+      </div>
+      {
+        image && (
+          <div class={type === 'row' ? 'basis-1/2' : 'w-full mt-8'}>
+            <div class="relative m-auto max-w-5xl">
+              {typeof image === 'string' ? (
+                <Fragment set:html={image} />
+              ) : (
+                <Image
+                  class="mx-auto rounded-md w-full"
+                  widths={[400, 768, 1024, 2040]}
+                  sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                  loading="eager"
+                  width={1024}
+                  height={576}
+                  {...image}
+                />
+              )}
+            </div>
+          </div>
+        )
+      }
+    </div>
+    <!-- #Hero Body -->
+  </div>
+</section>

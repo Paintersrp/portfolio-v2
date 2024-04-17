@@ -1,0 +1,122 @@
+---
+import { getImage } from 'astro:assets'
+import { AstroSeo } from '@astrolib/seo'
+import merge from 'lodash.merge'
+
+import { SITE, METADATA, I18N } from '@/config'
+import { getAsset, getCanonicalUrl, trimSlash } from '@/utils/paths'
+
+import type { Props as AstroSeoProps, OpenGraph } from '@astrolib/seo'
+import type { MetadataConfig } from '@/types/site'
+
+const adaptOpenGraphImages = async (
+  openGraph: OpenGraph = {},
+  astroSite: URL | undefined = new URL('')
+): Promise<OpenGraph> => {
+  if (!openGraph?.images?.length) {
+    return openGraph
+  }
+
+  const images = openGraph.images
+  const defaultWidth = 1200
+  const defaultHeight = 626
+
+  const adaptedImages = await Promise.all(
+    images.map(async (image) => {
+      if (image?.url) {
+        const imageAsset = getAsset(image.url)
+
+        const _image = await getImage({
+          src: imageAsset,
+          alt: 'Placeholder alt',
+          width: image?.width || defaultWidth,
+          height: image?.height || defaultHeight,
+        })
+
+        if (typeof _image === 'object') {
+          return {
+            url:
+              typeof _image.src === 'string'
+                ? _image.src.includes('unsplash')
+                  ? String(new URL(trimSlash(_image.src)))
+                  : String(new URL(_image.src, astroSite))
+                : 'pepe',
+            width:
+              typeof _image.attributes.width === 'number' ? _image.attributes.width : undefined,
+            height:
+              typeof _image.attributes.height === 'number' ? _image.attributes.height : undefined,
+          }
+        }
+
+        return {
+          url: '',
+        }
+      }
+
+      return {
+        url: '',
+      }
+    })
+  )
+
+  return { ...openGraph, ...(adaptedImages ? { images: adaptedImages } : {}) }
+}
+
+interface Props extends MetadataConfig {
+  dontUseTitleTemplate?: boolean
+}
+
+const {
+  title,
+  ignoreTitleTemplate = false,
+  canonical = String(getCanonicalUrl(String(Astro.url.pathname))),
+  robots = {},
+  description,
+  openGraph = {},
+  twitter = {},
+} = Astro.props
+
+const seoProps: AstroSeoProps = merge(
+  {
+    title: '',
+    titleTemplate: '%s',
+    canonical: canonical,
+    noindex: true,
+    nofollow: true,
+    description: undefined,
+    openGraph: {
+      url: canonical,
+      site_name: SITE?.name,
+      images: [],
+      locale: I18N?.language || 'en',
+      type: 'website',
+    },
+    twitter: {
+      cardType: openGraph?.images?.length ? 'summary_large_image' : 'summary',
+    },
+  },
+  {
+    title: typeof METADATA?.title === 'string' ? METADATA?.title : METADATA?.title?.default,
+    titleTemplate: typeof METADATA?.title === 'string' ? '' : METADATA?.title?.template,
+    noindex: typeof METADATA?.robots?.index !== 'undefined' ? !METADATA.robots.index : undefined,
+    nofollow: typeof METADATA?.robots?.follow !== 'undefined' ? !METADATA.robots.follow : undefined,
+    description: METADATA?.description,
+    openGraph: METADATA?.openGraph,
+    twitter: METADATA?.twitter,
+  },
+  {
+    title: title,
+    titleTemplate: ignoreTitleTemplate ? '%s' : undefined,
+    canonical: canonical,
+    noindex: typeof robots?.index !== 'undefined' ? !robots.index : undefined,
+    nofollow: typeof robots?.follow !== 'undefined' ? !robots.follow : undefined,
+    description: description,
+    openGraph: { url: canonical, ...openGraph },
+    twitter: twitter,
+  }
+)
+---
+
+<AstroSeo
+  {...{ ...seoProps, openGraph: await adaptOpenGraphImages(seoProps?.openGraph, Astro.site) }}
+/>

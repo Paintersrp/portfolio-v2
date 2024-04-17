@@ -1,0 +1,67 @@
+---
+import Actions from '@/components/ui/Actions.astro'
+import { cn } from '@/utils/utils'
+
+import type { Action, HeadlineProps } from '@/types/site'
+
+interface Classes {
+  container?: string
+  tagline?: string
+  title?: string
+  subtitle?: string
+  actionContainer?: string
+  action?: string
+}
+
+interface Props extends HeadlineProps {
+  actions?: Action[]
+  classes?: Classes
+}
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline = await Astro.slots.render('tagline'),
+  classes = {},
+  actions,
+} = Astro.props
+
+const {
+  container: containerClass = 'max-w-3xl',
+  tagline: taglineClass = '',
+  title: titleClass = 'text-3xl md:text-4xl ',
+  subtitle: subtitleClass = 'text-xl',
+  actionContainer: actionContainerClass = '',
+  action: actionClass = '',
+} = classes
+---
+
+<div class={cn('mb-4 md:mx-auto md:mb-4 text-center', containerClass)}>
+  {
+    tagline && (
+      <p
+        class={cn('text-base text-primary font-bold tracking-wide uppercase', taglineClass)}
+        set:html={tagline}
+      />
+    )
+  }
+  {
+    title && (
+      <h2
+        class={cn(
+          'font-bold leading-tight tracking-tighter font-heading text-heading text-3xl',
+          titleClass
+        )}
+        set:html={title}
+      />
+    )
+  }
+
+  {subtitle && <p class={cn('mt-4 text-muted', subtitleClass)} set:html={subtitle} />}
+
+  {
+    actions && (
+      <Actions {actions} classes={{ action: actionClass, container: actionContainerClass }} />
+    )
+  }
+</div>

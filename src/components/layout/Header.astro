@@ -1,0 +1,289 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import Button from '@/components/ui/Button.astro'
+import Logo from '@/components/ui/Logo.astro'
+import ToggleMenu from '@/components/ui/ToggleMenu.astro'
+import { ToggleTheme } from '@/components/ui/ToggleTheme'
+import { getAsset, HOME_PATH } from '@/utils/paths'
+
+import type { Action } from '@/types/site'
+import { cn } from '@/utils/utils'
+
+interface Link {
+  text?: string
+  href?: string
+  ariaLabel?: string
+  icon?: string
+}
+
+interface MenuLink extends Link {
+  links?: MenuLink[]
+}
+
+export interface Props {
+  id?: string
+  links?: MenuLink[]
+  actions?: Action[]
+  isSticky?: boolean
+
+  showToggleTheme?: boolean
+  showRssFeed?: boolean
+  position?: string
+}
+
+const {
+  id = 'header',
+  links = [],
+  actions = [],
+  isSticky = false,
+
+  showToggleTheme = false,
+  showRssFeed = false,
+  position = 'center',
+} = Astro.props
+---
+
+<header
+  class={cn(
+    'top-0 z-50 flex-none mx-auto w-full border-b border-gray-50/0 transition-all ease-in-out duration-300 bg-page',
+    isSticky && 'sticky',
+    !isSticky && 'relative'
+  )}
+  {...isSticky ? { 'data-sticky-header': true } : {}}
+  {...id ? { id } : {}}
+>
+  <div class="absolute inset-0 !bg-page"></div>
+  <div
+    class="max-w-5xl relative text-default py-2 px-2 md:px-6 mx-auto w-full md:flex md:justify-between"
+  >
+    <div class={cn('flex justify-between', position === 'right' && 'mr-auto')}>
+      <a class="flex items-center" href={HOME_PATH}>
+        <Logo />
+      </a>
+      <div class="flex items-center md:hidden">
+        <!-- <ToggleMenu /> -->
+        <ToggleMenu />
+      </div>
+    </div>
+
+    <!-- Main Nav -->
+    <nav
+      class="items-center w-full md:w-auto hidden md:flex text-muted overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:mx-5"
+      aria-label="Main navigation"
+    >
+      <ul
+        class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium"
+      >
+        {
+          links.map(({ text, href, links }) => (
+            <li class={links?.length ? 'dropdown ' : ''}>
+              {links?.length ? (
+                <>
+                  <button class="px-3 py-3 flex items-center">
+                    <span class="px-2">{text}</span>
+                    <Icon name="tabler:chevron-down" class="size-4 ml-0.5 hidden md:inline" />
+                  </button>
+
+                  <ul class="dropdown-menu border-border md:border md:backdrop-blur-md dark:bg-page rounded md:absolute pl-4 md:pl-0 md:hidden font-medium md:min-w-[200px]">
+                    {links.map(({ text: sublinkText, href: sublinkHref }) => (
+                      <li class="first:rounded-t last:rounded-b md:hover:bg-border">
+                        <a
+                          class="w-full py-2 px-4 block whitespace-no-wrap dark:hover:text-heading sine"
+                          href={sublinkHref}
+                        >
+                          {sublinkText}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <a class="px-3 py-3 flex items-centers" href={href}>
+                  <span class="underline-link px-2 dark:hover:text-heading sine">{text}</span>
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- Buttons -->
+    <div
+      class={cn(
+        'hidden md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0',
+        position === 'left' && 'ml-auto'
+      )}
+    >
+      <div class="items-center flex justify-between w-full md:w-auto">
+        <div class="flex gap-1">
+          <!-- RSS -->
+          {
+            showRssFeed && (
+              <a
+                class="text-heading hover:text-white hover:bg-primary dark:hover:bg-primary focus:outline-none focus:ring-4 focus:ring-primary dark:focus:ring-primary rounded-lg text-sm p-2.5 inline-flex items-center sine"
+                aria-label="RSS Feed"
+                href={getAsset('/rss.xml')}
+              >
+                <Icon name="tabler:rss" class="w-5 h-5" />
+              </a>
+            )
+          }
+
+          <!-- Theme Toggle -->
+          {showToggleTheme && <ToggleTheme classes={{ icon: 'size-6 md:size-5' }} client:idle />}
+        </div>
+
+        <!-- Action Buttons -->
+        {
+          actions?.length ? (
+            <span class="ml-4 rtl:ml-0 rtl:mr-4">
+              {actions.map((btnProps) => (
+                <Button
+                  {...btnProps}
+                  class="ml-2 py-2.5 px-5.5 md:px-6 font-semibold rounded shadow-none text-sm w-auto"
+                />
+              ))}
+            </span>
+          ) : (
+            ''
+          )
+        }
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  let lastKnownScrollPosition = window.scrollY
+  let ticking = true
+
+  function adjustStyles() {
+    document.querySelector('[data-menu-toggle]')?.classList.remove('expanded')
+    document.body.classList.remove('overflow-hidden')
+
+    document.getElementById('header')?.classList.remove('h-screen')
+    document.getElementById('header')?.classList.remove('expanded')
+    // document.getElementById('header')?.classList.remove('bg-page')
+
+    document.querySelector('#header nav')?.classList.add('hidden')
+    document.querySelector('#header > div > div:last-child')?.classList.add('hidden')
+  }
+
+  function appyHeaderStylesOnScroll() {
+    const header = document.querySelector('#header[data-sticky-header]')
+    const shouldAddScroll = lastKnownScrollPosition > 60 && !header?.classList.contains('scroll')
+    const shouldRemoveScroll = lastKnownScrollPosition <= 60 && header?.classList.contains('scroll')
+
+    if (shouldAddScroll) {
+      document.getElementById('header')?.classList.add('scroll')
+    } else if (shouldRemoveScroll) {
+      document.getElementById('header')?.classList.remove('scroll')
+    }
+
+    ticking = false
+  }
+
+  function adjustHeaderOnScroll() {
+    lastKnownScrollPosition = window.scrollY
+
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        appyHeaderStylesOnScroll()
+      })
+      ticking = true
+    }
+  }
+
+  let screenSize = window.matchMedia('(max-width: 767px)')
+  let headerNav = document.querySelector('#header nav')
+
+  screenSize.addEventListener('change', adjustStyles)
+  headerNav?.addEventListener('click', adjustStyles)
+  document.addEventListener('scroll', adjustHeaderOnScroll)
+
+  appyHeaderStylesOnScroll()
+</script>
+
+<script>
+  function removeActiveClass() {
+    document.querySelectorAll('#header nav a span.active-link').forEach((span) => {
+      span.classList.add('active-link-out')
+
+      setTimeout(() => {
+        span.classList.remove('active-link')
+        span.classList.remove('text-white')
+        span.classList.add('underline-link')
+
+        span.addEventListener('transitionend', () => {
+          span.classList.remove('active-link-out')
+        })
+      }, 10)
+    })
+  }
+
+  function makeLinkActive(id: string) {
+    const activeLink = document.querySelector(`#header nav a[href="/#${id}"] span`)
+
+    if (activeLink) {
+      activeLink.classList.remove('underline-link')
+      activeLink.classList.add('active-link')
+      activeLink.classList.add('text-white')
+    }
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          removeActiveClass()
+          makeLinkActive(entry.target.id)
+        }
+      })
+    },
+    { rootMargin: '-50% 0px -70% 0px' }
+  )
+
+  document.querySelectorAll('section').forEach((section) => {
+    observer.observe(section)
+  })
+
+  function setupIntersectObserver() {
+    document.querySelectorAll('section').forEach((section) => {
+      observer.observe(section)
+    })
+  }
+
+  // function addSmoothScrollListeners() {
+  //   const links = document.querySelectorAll('a[href^="#"]')
+
+  //   links.forEach((link) => {
+  //     link.addEventListener('click', function (event) {
+  //       event.preventDefault()
+
+  //       console.log(event.target)
+
+  //       // if (event.target) {
+  //       //   const targetId = event.target.getAttribute('href')
+  //       //   const targetElement = document.querySelector(targetId)
+
+  //       //   if (targetElement) {
+  //       //     targetElement.scrollIntoView({ behavior: 'smooth' })
+  //       //   }
+  //       // }
+  //     })
+  //   })
+  // }
+
+  setupIntersectObserver()
+  // addSmoothScrollListeners()
+
+  window.addEventListener('popstate', setupIntersectObserver)
+
+  document.addEventListener('astro:after-swap', () => {
+    // applyActiveClassToNavLink()
+    setupIntersectObserver()
+    // addSmoothScrollListeners()
+  })
+</script>

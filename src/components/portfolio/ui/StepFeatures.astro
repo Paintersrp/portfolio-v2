@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets'
+
+import TimelineSteps from '@/components/portfolio/ui/TimelineSteps.astro'
+import Headline from '@/components/ui/Headline.astro'
+import Section from '@/components/ui/Section.astro'
+import { cn } from '@/utils/utils'
+
+import type { Steps } from '@/types/site'
+
+const {
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  tagline = await Astro.slots.render('tagline'),
+  items = [],
+  image = await Astro.slots.render('image'),
+  isReversed = false,
+
+  id,
+  isDark = false,
+  classes,
+} = Astro.props as Steps
+---
+
+<Section id={id} isDark={isDark} class={cn('max-w-5xl', classes?.container)}>
+  <div
+    class={cn(
+      'flex flex-col gap-8 md:gap-12',
+      isReversed && 'md:flex-row-reverse',
+      image && 'md:flex-row',
+      !image && 'items-center'
+    )}
+  >
+    <div class={cn('md:py-4 md:self-center', image && 'md:self-center', !image && 'w-full')}>
+      <Headline
+        title={title}
+        subtitle={subtitle}
+        tagline={tagline}
+        classes={{
+          container: 'text-left rtl:text-right',
+          title: 'text-3xl lg:text-4xl',
+          ...((classes?.headline as {}) ?? {}),
+        }}
+      />
+      <TimelineSteps items={items} classes={classes?.items as {}} />
+    </div>
+    {
+      image && (
+        <div class="relative md:basis-1/2">
+          {typeof image === 'string' ? (
+            <Fragment set:html={image} />
+          ) : (
+            <Image
+              class="inset-0 object-cover object-top w-full rounded-md shadow-lg md:absolute md:h-full bg-gray-400 dark:bg-slate-700"
+              widths={[400, 768]}
+              sizes="(max-width: 768px) 100vw, 432px"
+              width={432}
+              height={768}
+              src={image?.src}
+              alt={image?.alt || ''}
+            />
+          )}
+        </div>
+      )
+    }
+  </div>
+</Section>

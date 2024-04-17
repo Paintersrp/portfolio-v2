@@ -1,0 +1,35 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import { I18N } from '@/config'
+import Button from '@/components/ui/Button.astro'
+import { cn } from '@/utils/utils'
+
+interface Props {
+  text: string
+  href: string
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'link'
+  textDirection?: 'rtl' | 'ltr'
+  classes?: {
+    container?: string
+    button?: string
+    icon?: string
+    text?: string
+  }
+}
+
+const { text, href, variant = 'primary', textDirection = I18N.textDirection, classes } = Astro.props
+---
+
+<div class={cn('mx-auto px-6 sm:px-6 max-w-3xl pt-8 md:pt-4 pb-12 md:pb-20', classes?.container)}>
+  <Button variant={variant} class={cn('px-3 md:px-3', classes?.button)} href={href}>
+    {
+      textDirection === 'rtl' ? (
+        <Icon name="tabler:chevron-right" class={cn('w-5 h-5 mr-1 -ml-1.5', classes?.icon)} />
+      ) : (
+        <Icon name="tabler:chevron-left" class={cn('w-5 h-5 mr-1 -ml-1.5', classes?.icon)} />
+      )
+    }
+    <span class={classes?.text}>{text}</span>
+  </Button>
+</div>

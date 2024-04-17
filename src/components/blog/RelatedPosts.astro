@@ -1,0 +1,21 @@
+---
+import Posts from '@/components/blog/Posts.astro'
+import { fetchPosts, getRelatedPosts } from '@/utils/blog'
+
+import type { Post } from '@/types/site'
+
+interface Props {
+  post: Post
+}
+
+const { post } = Astro.props
+const fetchedPosts = await fetchPosts()
+const relatedPosts = post.tags ? getRelatedPosts(fetchedPosts, post.slug, post.tags) : []
+---
+
+<Posts
+  class="pt-0 lg:pt-0 md:pt-0"
+  title="Related Posts"
+  linkText="View All Posts"
+  postIds={relatedPosts.map((post) => post.id)}
+/>

@@ -1,0 +1,86 @@
+---
+title: 'Web Developer Portfolio'
+description: 'This website explores the creative and technical world of my self taught developer journey.'
+githubUrl: 'https://www.github.com/Paintersrp'
+liveUrl: 'https://srp-portfolio.vercel.app/'
+startDate: 2024-03-06T00:00:00Z
+deployDate: 2024-03-06T00:00:00Z
+modifiedDate: 2024-03-06T00:00:00Z
+metadata:
+  publishedDate: 2024-03-06T00:00:00Z
+  modifiedDate: 2024-03-06T00:00:00Z
+stack:
+  - icon: 'tabler:brand-react'
+    text: 'React'
+  - icon: 'tabler:brand-supabase'
+    text: 'Supabase'
+  - icon: 'tabler:database'
+    text: 'Postgres'
+  - icon: 'tabler:brand-docker'
+    text: 'Docker'
+---
+
+import RoadmapList from '@/components/projects/RoadmapList.astro'
+import ButtonLinks from '@/components/projects/ButtonLinks.astro'
+
+### Overview
+
+Welcome to a visual narrative of my self-taught developer journey, presented through this comprehensive portfolio. It is a testament to the power of curiosity and the relentless pursuit of knowledge, showcasing a spectrum of projects that range from the elegantly simple to the ambitiously complex.
+
+This portfolio is more than a collection of work; it's a living document of my growth as a developer. It reflects a commitment to continuous learning and an unwavering passion for problem-solving. Through this platform, I invite you to explore the milestones of my developer odyssey.
+
+### Roadmap
+
+<RoadmapList
+  items={[
+    {
+      text: 'Launch initial portfolio website',
+      status: 'complete',
+    },
+    {
+      text: 'Integrate React for dynamic content',
+      status: 'complete',
+    },
+    {
+      text: 'Set up Supabase for backend services',
+      status: 'complete',
+    },
+    {
+      text: 'Deploy with Docker containerization',
+      status: 'in-progress',
+    },
+    {
+      text: 'Incorporate advanced Postgres features',
+      status: 'in-progress',
+    },
+    {
+      text: 'Implement responsive design updates',
+      status: 'in-progress',
+    },
+    {
+      text: 'Add new project case studies',
+      status: 'not-started',
+    },
+    {
+      text: 'Optimize performance for faster load times',
+      status: 'not-started',
+    },
+  ]}
+/>
+
+### Links
+
+<ButtonLinks
+  items={[
+    {
+      href: frontmatter.githubUrl,
+      icon: 'tabler:brand-github',
+      text: 'GitHub',
+    },
+    {
+      href: frontmatter.liveUrl,
+      icon: 'tabler:external-link',
+      text: 'Live',
+    },
+  ]}
+/>

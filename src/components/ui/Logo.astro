@@ -1,0 +1,12 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import { SITE } from '@/config'
+---
+
+<span
+  class="self-center ml-2 text-2xl md:text-xl font-bold text-heading whitespace-nowrap flex items-center"
+>
+  <Icon name="tabler:brand-abstract" class="size-6 mr-2 text-heading" />
+  {SITE?.name}
+</span>

@@ -1,0 +1,54 @@
+---
+import AstroIcon from '@/components/ui/AstroIcon.astro'
+import IconList from '@/components/ui/IconList.astro'
+import JavaIcon from '@/components/ui/JavaIcon.astro'
+
+const skills = [
+  {
+    title: 'Languages',
+    items: [
+      { icon: 'tabler:brand-typescript', text: 'TypeScript' },
+      { icon: 'tabler:brand-python', text: 'Python' },
+      { icon: 'tabler:brand-rust', text: 'Rust' },
+      { icon: 'tabler:brand-golang', text: 'Go' },
+      { icon: JavaIcon, text: 'Java' },
+    ],
+  },
+  {
+    title: 'Frameworks',
+    items: [
+      { icon: 'tabler:brand-react', text: 'React' },
+      { icon: 'tabler:brand-nextjs', text: 'Next' },
+      { icon: 'tabler:brand-svelte', text: 'Svelte' },
+      { icon: 'tabler:brand-vue', text: 'Vue' },
+      { icon: 'tabler:brand-django', text: 'Django' },
+      { icon: AstroIcon, text: 'Astro' },
+    ],
+  },
+  {
+    title: 'Technologies',
+    items: [
+      { icon: 'tabler:brand-aws', text: 'AWS' },
+      { icon: 'tabler:brand-github', text: 'GitHub' },
+      { icon: 'tabler:brand-docker', text: 'Docker' },
+      { icon: 'tabler:brand-supabase', text: 'Supabase' },
+      { icon: 'tabler:brand-firebase', text: 'Firebase' },
+      { icon: 'tabler:brand-wordpress', text: 'Wordpress' },
+    ],
+  },
+  {
+    title: 'Design',
+    items: [
+      { icon: 'tabler:brand-html5', text: 'HTML' },
+      { icon: 'tabler:brand-css3', text: 'CSS' },
+      { icon: 'tabler:brand-sass', text: 'Sass' },
+      { icon: 'tabler:brand-tailwind', text: 'Tailwind' },
+      { icon: 'tabler:brand-figma', text: 'Figam' },
+    ],
+  },
+]
+---
+
+<div class="grid grid-cols-2">
+  {skills.map((list) => <IconList {...list} />)}
+</div>

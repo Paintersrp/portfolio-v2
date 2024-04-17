@@ -1,0 +1,35 @@
+---
+import { Icon } from 'astro-icon/components'
+
+import { cn } from '@/utils/utils'
+
+export type IconFn = (_props: Record<string, any>) => any
+export interface IconListItemType {
+  icon: string | IconFn
+  text: string
+}
+
+interface Classes {
+  container?: string
+  icon?: string
+  text?: string
+}
+
+interface Props {
+  item: IconListItemType
+  classes?: Classes
+}
+
+const { classes, item } = Astro.props
+---
+
+<li class={cn('my-[6px] text-base text-muted flex gap-2 items-center', classes?.container)}>
+  {
+    typeof item.icon === 'string' ? (
+      <Icon name={item.icon} class={cn('size-5 text-primary', classes?.icon)} />
+    ) : (
+      <item.icon class="size-5 text-primary" />
+    )
+  }
+  <span class={classes?.text}>{item.text}</span>
+</li>

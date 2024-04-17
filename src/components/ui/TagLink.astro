@@ -1,0 +1,28 @@
+---
+import { cn } from '@/utils/utils'
+
+interface Classes {
+  container?: string
+  link?: string
+}
+
+interface Props {
+  href: string
+  text: string
+  classes?: Classes
+}
+
+const { href, text, classes } = Astro.props
+---
+
+<li class={cn('inline-block', classes?.container)}>
+  <a
+    {href}
+    class={cn(
+      'bg-primary py-0.5 px-1.5 lowercase font-medium text-white dark:text-default rounded text-xs hover:bg-primary-hover hover:dark:bg-primary-hover transition-colors',
+      classes?.link
+    )}
+  >
+    {text}
+  </a>
+</li>
