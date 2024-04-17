@@ -35,8 +35,7 @@ const getNormalizedTag = async (tag: CollectionEntry<'tag'>): Promise<Tag> => {
 
   return {
     id,
-    slug,
-    
+    slug,    
     title,
     description,
     image,

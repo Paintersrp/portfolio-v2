@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config'
-import compress from 'astro-compress'
+// import compress from 'astro-compress'
 import icon from 'astro-icon'
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
@@ -27,17 +27,17 @@ export default defineConfig({
         tabler: ['*'],
       },
     }),
-    compress({
-      CSS: true,
-      HTML: {
-        'html-minifier-terser': {
-          removeAttributeQuotes: false,
-        },
-      },
-      Image: false,
-      JavaScript: true,
-      SVG: false,
-    }),
+    // compress({
+    //   CSS: true,
+    //   HTML: {
+    //     'html-minifier-terser': {
+    //       removeAttributeQuotes: false,
+    //     },
+    //   },
+    //   Image: false,
+    //   JavaScript: true,
+    //   SVG: false,
+    // }),
     tasks(),
     react(),
   ],
