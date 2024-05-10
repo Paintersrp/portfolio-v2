@@ -1,13 +1,14 @@
 ---
-publishDate: 2024-03-12T00:00:00Z
-title: Unleashing HTMX - Building a Demo Reactive CRUD App
+created: 2024-03-12T00:00:00Z
+updated: 2024-03-17T00:00:00Z
+published: 2024-03-17T00:00:00Z
+title: Dynamic Reactivity in HTMX
 image: https://images.unsplash.com/photo-1518773553398-650c184e0bb3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 excerpt: HTMX is a transformative library that breathes new life into HTML, empowering it with AJAX, WebSockets, and Server Sent Events. Follow along as we atempt to harness the full potential of HTMX in building a dynamic web application.
-category: Tutorial
+category: tutorials
+draft: false
 tags:
   - htmx
-  - express
-  - front-end
 ---
 
 import { Image } from 'astro:assets'
@@ -283,7 +284,7 @@ app.get('/', (_, res) => {
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`))
 ```
 
-We initializes a live reload server to facilitate real-time updates during development. It works by injecting a script into the HTML that listens for changes and triggers a page refresh whenever the server restarts. This works in tandem with our nodemon script, which restarts the server whenever a file changes. It's not quite Vite.. but it'll do.
+We initialize a live reload server to facilitate real-time updates during development. It works by injecting a script into the HTML that listens for changes and triggers a page refresh whenever the server restarts. This works in tandem with our nodemon script, which restarts the server whenever a file changes. It's not quite Vite.. but it'll do.
 
 We’re using an array to store tasks, which will be rendered on the page and act as our mock database for CRUD operations. While this tutorial uses an array for simplicity, you can integrate a real database like MongoDB, PostgreSQL, or MySQL. ORMs such as Sequelize, TypeORM, or Prisma can also be used for database interactions.
 
@@ -808,10 +809,10 @@ To verify these updates, edit a task in the application. The task should update 
 
 Currently, after editing a task, the edit form remains visible. While users can manually revert to the add form, a more user-friendly approach is to automate this process. Implementing auto-removal of the edit form post-update enhances the application’s usability.
 
-We could use inline HTMX attributes to set up event listeners and logic to get this done, however.. I'm not a huge fan of long inline functions. So instead of writing all the logic inline, let's use this as an opportunity to explore how to combine JavaScript (or TypeScript) with HTMX. 
+We could use inline HTMX attributes to set up event listeners and logic to get this done, however.. I'm not a huge fan of long inline functions. So instead of writing all the logic inline, let's use this as an opportunity to explore how to combine JavaScript (or TypeScript) with HTMX.
 
 
-<Image src="https://i.imgur.com/6HXHc44.gif"  
+<Image src="https://i.imgur.com/6HXHc44.gif"
   class="lg:max-w-[720px] mx-auto mb-6 sm:rounded-md"
   widths={[400, 720]}
   sizes="(max-width: 720px) 400px, 720px"
@@ -819,7 +820,7 @@ We could use inline HTMX attributes to set up event listeners and logic to get t
   width={720}
   height={506}
   loading="eager"
-  decoding="async" alt="ricky-gif" 
+  decoding="async" alt="ricky-gif"
 />
 
 - Add the following script to the index.ejs template

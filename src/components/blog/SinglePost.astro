@@ -24,9 +24,10 @@ const { Content } = post
         class="flex justify-between flex-col sm:flex-row max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6 sm:items-center"
       >
         <p>
+          <!-- TODO: Publish/Updated Dates -->
           <Icon name="tabler:clock" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
-          <time datetime={String(post.publishDate)} class="inline-block">
-            {getFormattedDate(post.publishDate)}
+          <time datetime={String(post.created)} class="inline-block">
+            {getFormattedDate(post.created)}
           </time>
 
           {
@@ -50,7 +51,7 @@ const { Content } = post
       <h1
         class="px-4 sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading"
       >
-        {post.title}
+        {post.draft ? '[DRAFT] ' : ''}{post.title}
       </h1>
       <p
         class="max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-muted"

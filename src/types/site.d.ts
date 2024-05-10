@@ -5,8 +5,9 @@ export interface Post {
   id: string
   slug: string
   permalink: string
-  publishDate: Date
-  updateDate?: Date
+  created: Date
+  published?: Date
+  updated?: Date
   title: string
   excerpt?: string
   image?: ImageMetadata | string
@@ -33,8 +34,8 @@ export interface BasicCollection {
   content?: string
 }
 
-export interface Tag extends BasicCollection {}
-export interface Category extends BasicCollection {}
+export interface Tag extends BasicCollection { }
+export interface Category extends BasicCollection { }
 
 export interface Project extends BasicCollection {
   image: any
@@ -55,11 +56,11 @@ export interface SiteConfig {
 
 export interface MetadataConfig {
   title?:
-    | {
-        default: string
-        template: string
-      }
-    | string
+  | {
+    default: string
+    template: string
+  }
+  | string
 
   description?: string
   canonical?: string
@@ -146,7 +147,7 @@ export interface HeadlineProps {
   }
 }
 
-export interface HeadlinedSectionProps extends SectionProps, HeadlineProps {}
+export interface HeadlinedSectionProps extends SectionProps, HeadlineProps { }
 
 export interface ContentContainerProps extends HeadlinedSectionProps {
   image?: string | unknown
@@ -168,7 +169,7 @@ export interface ContentContainerProps extends HeadlinedSectionProps {
   }
 }
 
-export interface FeatureContainerProps extends ContentContainerProps {}
+export interface FeatureContainerProps extends ContentContainerProps { }
 
 export interface Steps extends FeatureContainerProps {
   items: StepItem[]
@@ -194,7 +195,7 @@ export interface ItemClasses {
   icon?: string
 }
 
-export interface StepItem extends Item {}
+export interface StepItem extends Item { }
 
 export interface Action extends HTMLAttributes<any> {
   variant?: 'primary' | 'secondary' | 'tertiary' | 'link'

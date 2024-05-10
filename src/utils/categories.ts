@@ -1,7 +1,7 @@
 import { getCollection } from 'astro:content'
 
 import { BLOG } from '@/config'
-import { fetchPosts } from '@/utils/blog'
+import { fetchPosts } from '@/utils/post'
 import { CATEGORY_PATH } from '@/utils/paths'
 
 import type { PaginateFunction } from 'astro'
@@ -18,7 +18,7 @@ export const fetchCategories = async (): Promise<Category[]> => {
   return _categories
 }
 
-const load = async function (): Promise<Category[]> {
+const load = async function(): Promise<Category[]> {
   const categories = await getCollection('category')
   const normalizedCategories = categories.map(
     async (category) => await getNormalizedCategory(category)
@@ -38,7 +38,7 @@ const getNormalizedCategory = async (category: CollectionEntry<'category'>): Pro
   return {
     id,
     slug,
-    
+
     title,
     description,
     image,
@@ -52,8 +52,8 @@ export const findCategoriesBySlugs = async (slugs: string[]): Promise<Category[]
 
   const categories = await fetchCategories()
 
-  return slugs.reduce(function (array: Category[], slug: string) {
-    categories.some(function (category: Category) {
+  return slugs.reduce(function(array: Category[], slug: string) {
+    categories.some(function(category: Category) {
       return slug === category.slug && array.push(category)
     })
 
@@ -66,8 +66,8 @@ export const findCategoriesByIds = async (ids: string[]): Promise<Category[]> =>
 
   const categories = await fetchCategories()
 
-  return ids.reduce(function (array: Category[], id: string) {
-    categories.some(function (category: Category) {
+  return ids.reduce(function(array: Category[], id: string) {
+    categories.some(function(category: Category) {
       return id === category.id && array.push(category)
     })
 

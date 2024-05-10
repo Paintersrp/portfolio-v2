@@ -1,7 +1,7 @@
 import { getCollection } from 'astro:content'
 
 import { BLOG } from '@/config'
-import { fetchPosts } from '@/utils/blog'
+import { fetchPosts } from '@/utils/post'
 import { TAG_PATH } from '@/utils/paths'
 
 import type { CollectionEntry } from 'astro:content'
@@ -18,7 +18,7 @@ export const fetchTags = async (): Promise<Tag[]> => {
   return _tags
 }
 
-const load = async function (): Promise<Tag[]> {
+const load = async function(): Promise<Tag[]> {
   const tags = await getCollection('tag')
   const normalizedTags = tags.map(async (tag) => await getNormalizedTag(tag))
 
@@ -35,7 +35,7 @@ const getNormalizedTag = async (tag: CollectionEntry<'tag'>): Promise<Tag> => {
 
   return {
     id,
-    slug,    
+    slug,
     title,
     description,
     image,
@@ -49,8 +49,8 @@ export const findTagsBySlugs = async (slugs: string[]): Promise<Tag[]> => {
 
   const tags = await fetchTags()
 
-  return slugs.reduce(function (array: Tag[], slug: string) {
-    tags.some(function (tag: Tag) {
+  return slugs.reduce(function(array: Tag[], slug: string) {
+    tags.some(function(tag: Tag) {
       return slug === tag.slug && array.push(tag)
     })
 
@@ -63,8 +63,8 @@ export const findTagsByIds = async (ids: string[]): Promise<Tag[]> => {
 
   const tags = await fetchTags()
 
-  return ids.reduce(function (array: Tag[], id: string) {
-    tags.some(function (tag: Tag) {
+  return ids.reduce(function(array: Tag[], id: string) {
+    tags.some(function(tag: Tag) {
       return id === tag.id && array.push(tag)
     })
     return array

@@ -1,7 +1,7 @@
 import { getRssString } from '@astrojs/rss'
 
 import { SITE, METADATA } from '@/config'
-import { fetchPosts } from '@/utils/blog'
+import { fetchPosts } from '@/utils/post'
 import { getLink } from '@/utils/paths'
 
 export const GET = async () => {
@@ -17,7 +17,7 @@ export const GET = async () => {
       link: getLink(post.permalink),
       title: post.title,
       description: post.excerpt,
-      pubDate: post.publishDate,
+      pubDate: post.created,
     })),
   })
 

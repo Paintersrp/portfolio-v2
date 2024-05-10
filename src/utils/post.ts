@@ -43,15 +43,24 @@ export const fetchCounts = async (): Promise<{
   return _counts
 }
 
-const load = async function (): Promise<Post[]> {
-  const posts = await getCollection('post')
-  const normalizedPosts = posts.map(async (post) => await getNormalizedPost(post))
+const load = async function(): Promise<Post[]> {
+  const posts = await getCollection('post');
 
-  const results = (await Promise.all(normalizedPosts))
-    .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
-    .filter((post) => !post.draft)
+  const normalizedPosts = await Promise.all(
+    posts.map(async (post) => await getNormalizedPost(post))
+  );
 
-  return results
+  // Check if the environment is development
+  const isDevelopment = import.meta.env.DEV;
+
+  // Apply different filtering logic based on the environment
+  const filteredPosts = isDevelopment
+    ? normalizedPosts // Include all posts (drafts and non-drafts) in development
+    : normalizedPosts.filter((post) => !post.draft); // Exclude draft posts in production
+
+  const sortedPosts = filteredPosts.sort((a, b) => b.created.valueOf() - a.created.valueOf());
+
+  return sortedPosts;
 }
 
 const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> => {
@@ -59,8 +68,9 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
   const { Content } = await post.render()
 
   const {
-    publishDate: rawPublishDate = new Date(),
-    updateDate: rawUpdateDate,
+    created: rawCreationDate = new Date(),
+    published: rawPublishDate,
+    updated: rawUpdateDate,
     title,
     excerpt,
     image,
@@ -71,8 +81,9 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
   } = data
 
   const slug = cleanSlug(rawSlug)
-  const publishDate = new Date(rawPublishDate)
-  const updateDate = rawUpdateDate ? new Date(rawUpdateDate) : undefined
+  const created = new Date(rawCreationDate)
+  const published = rawPublishDate ? new Date(rawPublishDate) : undefined
+  const updated = rawUpdateDate ? new Date(rawUpdateDate) : undefined
   const category = rawCategory ? cleanSlug(rawCategory) : undefined
   const tags = rawTags.map((tag: string) => cleanSlug(tag))
 
@@ -83,8 +94,9 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
     id,
     slug,
     permalink: await generatePermalink({ slug }),
-    publishDate,
-    updateDate,
+    created,
+    published,
+    updated,
     title,
     excerpt,
     image,
@@ -130,8 +142,8 @@ export const findPostsBySlugs = async (slugs: string[]): Promise<Post[]> => {
 
   const posts = await fetchPosts()
 
-  return slugs.reduce(function (array: Post[], slug: string) {
-    posts.some(function (post: Post) {
+  return slugs.reduce(function(array: Post[], slug: string) {
+    posts.some(function(post: Post) {
       return slug === post.slug && array.push(post)
     })
 
@@ -144,8 +156,8 @@ export const findPostsByIds = async (ids: string[]): Promise<Post[]> => {
 
   const posts = await fetchPosts()
 
-  return ids.reduce(function (array: Post[], id: string) {
-    posts.some(function (post: Post) {
+  return ids.reduce(function(array: Post[], id: string) {
+    posts.some(function(post: Post) {
       return id === post.id && array.push(post)
     })
     return array

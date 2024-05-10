@@ -22,15 +22,15 @@ stack:
 import RoadmapList from '@/components/projects/RoadmapList.astro'
 import ButtonLinks from '@/components/projects/ButtonLinks.astro'
 
+## Side Note
+
+Unforunately this project was using PlanetScale, who recently shutdown their free tier, so I will have to go back and do some refactoring before it's back online. I will eventually migrate this to run off of one of my linode instances which can host it's own Postgres server.
+
 ### Overview
 
-Hivemind is an innovative platform designed to mirror the dynamic and diverse nature of Reddit's community interaction. This project is a testament to the collaborative spirit of the internet, offering a space where users can convene to discuss, debate, and disseminate information. With a focus on user-friendly design and robust functionality, Hivemind stands as a modern interpretation of a forum, enhanced by the latest advancements in web development.
+Hivemind is an innovative platform designed to mirror the dynamic and diverse nature of Reddit's community interaction. With a focus on user-friendly design and robust functionality, Hivemind stands as a modern interpretation of a forum, enhanced by the latest advancements in web development.
 
 The backbone of Hivemind is its tech stack, which includes NextJS for server-side rendering and static site generation, AWS for scalable cloud infrastructure, MySQL for a reliable database solution, and Prisma for efficient database management. This combination ensures a resilient and flexible architecture that can handle the ebb and flow of community engagement.
-
-From the onset, the goal was to create a platform that not only allows for the exchange of ideas but also encourages the growth of a community. Each feature of Hivemind, from thread creation to comment threading, has been meticulously crafted to foster an environment where conversations can thrive.
-
-As the developer behind Hivemind, I have poured countless hours into ensuring that each line of code not only functions but also contributes to the greater user experience. This portfolio piece showcases my dedication to the craft of web development and my commitment to creating spaces that bring people together.
 
 ### Roadmap
 
@@ -79,6 +79,10 @@ As the developer behind Hivemind, I have poured countless hours into ensuring th
     {
       text: 'Deploy to production',
       status: 'complete',
+    },
+    {
+      text: 'Refactor to Linode Server in place of PlanetScale',
+      status: 'not-started',
     },
   ]}
 />

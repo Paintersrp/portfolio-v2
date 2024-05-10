@@ -4,7 +4,7 @@ import { Icon } from 'astro-icon/components'
 
 import PostTags from '@/components/blog/ui/PostTags.astro'
 
-import { fetchCounts } from '@/utils/blog'
+import { fetchCounts } from '@/utils/post'
 import { getFormattedDate } from '@/utils/utils'
 
 import type { Post } from '@/types/site'
@@ -49,8 +49,8 @@ const href = `/${post.permalink}`
       <div class="mb-1">
         <span class="text-sm text-muted">
           <Icon name="tabler:clock-filled" class="size-4 inline-block -mt-0.5 text-primary" />
-          <time datetime={String(post.publishDate)} class="inline-block mr-0.5">
-            {getFormattedDate(post.publishDate)}
+          <time datetime={String(post.created)} class="inline-block mr-0.5">
+            {getFormattedDate(post.created)}
           </time>
 
           {
@@ -73,7 +73,7 @@ const href = `/${post.permalink}`
         {
           href ? (
             <a class="hover:text-primary" {href}>
-              {post.title}
+              {post.draft ? '[DRAFT] ' : ''} {post.title}
             </a>
           ) : (
             post.title

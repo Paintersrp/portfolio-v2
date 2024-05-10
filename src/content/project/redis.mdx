@@ -1,0 +1,44 @@
+---
+title: Go Redis
+description: A custom Redis implementation built with Go, providing a high-performance in-memory data structure store.
+githubUrl: https://github.com/Paintersrp/go-redis
+liveUrl: https://github.com/Paintersrp/go-redis
+startDate: 2023-09-01T00:00:00Z
+modifiedDate: 2023-12-15T00:00:00Z
+metadata:
+  publishedDate: 2023-09-01T00:00:00Z
+  modifiedDate: 2023-12-15T00:00:00Z
+stack:
+  - icon: tabler:brand-golang
+    text: Go
+
+---
+
+import ButtonLinks from '@/components/projects/ButtonLinks.astro'
+
+### Overview
+
+This project is a custom implementation of Redis, a popular open-source in-memory data structure store, built entirely in Go. Redis is widely used as a database, cache, and message broker, and this implementation aims to provide a high-performance, thread-safe solution for handling in-memory data structures.
+
+The core functionality includes support for various data structures such as strings, lists, sets, sorted sets, and hashes. Additionally, the implementation features advanced capabilities like pub/sub messaging, transactions, and persistence options.
+
+### Features
+
+- **High-Performance**: Leveraging Go's concurrency features and efficient memory management, this implementation delivers lightning-fast performance for handling in-memory data structures.
+- **Thread Safety**: The implementation ensures thread safety, allowing multiple clients to access and modify data concurrently without risking data corruption or race conditions.
+- **TCP Networking**: The Redis protocol is implemented over TCP networking, enabling clients to connect and interact with the server remotely.
+- **Data Persistence**: Various persistence options are available, including snapshotting and append-only file (AOF) logging, ensuring data durability across server restarts.
+- **Pub/Sub Messaging**: The implementation supports Redis' pub/sub messaging system, enabling real-time communication between publishers and subscribers.
+
+### Links
+
+<ButtonLinks
+  items={[
+    {
+      href: frontmatter.githubUrl,
+      icon: 'tabler:brand-github',
+      text: 'GitHub',
+    },
+  ]}
+/>
+

@@ -1,18 +1,19 @@
-import { cn } from '@/utils/utils'
+import { useStore } from '@nanostores/react';
 import { useState } from 'react'
-import { Toaster } from './Sonner'
-
 import { toast } from "sonner"
 
+import { Toaster } from './Sonner'
+import { cn } from '@/utils/utils'
+import { currentTheme } from '@/utils/state';
+
 const ReactContactForm = () => {
+  const $currentTheme = useStore(currentTheme);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
   }
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -34,8 +35,6 @@ const ReactContactForm = () => {
       if (response.ok) {
         const data = await response.json()
 
-        console.log(data)
-
         // Display success toast
         toast.success(`Thank you, ${data[0].name} (${data[0].email}), for contacting me!`, {
           description: `I'll get back to you soon.`,
@@ -48,17 +47,16 @@ const ReactContactForm = () => {
         toast.error("Error submitting form. Please try again later.")
       }
     } catch (error) {
-      console.error('Error submitting form:', error)
       toast.error("Error submitting form. Please try again later.")
     }
   }
   return (
     <>
       <Toaster richColors position="top-right" />
-      <section className="scroll-mt-[72px]">
+      <section className={cn("scroll-mt-[72px]", $currentTheme === "dark" ? "dark" : "")} id="contact-form">
         <div
           className={cn(
-            'relative px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default dark max-w-5xl mx-auto'
+            'relative px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default max-w-5xl mx-auto'
           )}
         >
           <div

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { cn } from '../../utils/utils'
+import { cn } from '@/utils/utils'
+import { currentTheme } from '@/utils/state'
 
 export function useMounted() {
   const [mounted, setMounted] = useState(false)
@@ -69,14 +70,18 @@ export function ToggleTheme({ classes }: { classes: { button?: string; icon?: st
     }
 
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      currentTheme.set("dark")
       return 'dark'
     }
 
+
+    currentTheme.set("light")
     return 'light'
   })
 
   const toggleTheme = () => {
     const t = theme === 'light' ? 'dark' : 'light'
+    currentTheme.set(t)
     localStorage.setItem('theme', t)
     setTheme(t)
   }
