@@ -2,6 +2,9 @@
 dist/
 .output/
 
+portfolio-deploy.sh
+portfolio-recovery.sh
+
 # dependencies
 node_modules/
 
@@ -22,3 +25,4 @@ pnpm-debug.log*
 pnpm-lock.yaml
 
 .astro
+
