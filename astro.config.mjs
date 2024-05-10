@@ -45,6 +45,10 @@ export default defineConfig({
   //   service: squooshImageService(),
   // },
   vite: {
+    define: {
+      'import.meta.env.PUBLIC_BASE_URL': JSON.stringify(process.env.PUBLIC_BASE_URL),
+      'import.meta.env.PUBLIC_TOKEN': JSON.stringify(process.env.PUBLIC_TOKEN),
+    },
     resolve: {
       alias: {
         '@/': path.resolve(path.dirname(fileURLToPath(import.meta.url)), './src'),

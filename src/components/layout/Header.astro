@@ -6,9 +6,13 @@ import Logo from '@/components/ui/Logo.astro'
 import ToggleMenu from '@/components/ui/ToggleMenu.astro'
 import { ToggleTheme } from '@/components/ui/ToggleTheme'
 import { getAsset, HOME_PATH } from '@/utils/paths'
+import { SITE } from '@/config'
 
 import type { Action } from '@/types/site'
 import { cn } from '@/utils/utils'
+
+import FavIcon from '@/assets/favicons/favicon-32x32.png'
+import { Image } from 'astro:assets'
 
 interface Link {
   text?: string
@@ -59,7 +63,24 @@ const {
   >
     <div class={cn('flex justify-between', position === 'right' && 'mr-auto')}>
       <a class="flex items-center" href={HOME_PATH}>
-        <Logo />
+        <span
+          class="self-center ml-2 text-2xl md:text-xl font-bold text-heading whitespace-nowrap flex items-center"
+        >
+          <Image
+            src={FavIcon}
+            class=""
+            widths={[32, 16]}
+            sizes="(max-width: 720px) 400px, 720px"
+            alt={'Incorrect Swap'}
+            width={32}
+            height={32}
+            loading="eager"
+            decoding="async"
+          />
+
+          {SITE?.name}
+        </span>
+        <!-- <Logo /> -->
       </a>
       <div class="flex items-center md:hidden">
         <!-- <ToggleMenu /> -->

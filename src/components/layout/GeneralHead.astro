@@ -1,9 +1,8 @@
 ---
 import { GoogleAnalytics } from '@astrolib/analytics'
 
-import appleTouchIcon from '@/assets/favicons/apple-touch-icon.png'
 import favIcon from '@/assets/favicons/favicon.ico'
-import favIconSvg from '@/assets/favicons/favicon.svg'
+// import favIconSvg from '@/assets/favicons/favicon.svg'
 
 import { ANALYTICS, SITE } from '@/config'
 import { getAsset } from '@/utils/paths'
@@ -12,10 +11,10 @@ import { getAsset } from '@/utils/paths'
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="sitemap" href={getAsset('/sitemap-index.xml')} />
-<link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon.src} />
+<!-- <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon.src} /> -->
 <link rel="shortcut icon" href={favIcon} />
-<link rel="icon" type="image/svg+xml" href={favIconSvg.src} />
-<link rel="mask-icon" href={favIconSvg.src} color="#8D46E7" />
+<!-- <link rel="icon" type="image/svg+xml" href={favIconSvg.src} /> -->
+<!-- <link rel="mask-icon" href={favIconSvg.src} color="#8D46E7" /> -->
 
 {
   SITE.googleSiteVerificationId && (
