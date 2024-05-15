@@ -23,6 +23,19 @@ import SubmitSwapGif from '@/assets/posts/htmx-unleashed-submit-swap.gif'
 import EditGif from '@/assets/posts/htmx-unleashed-edit-1.gif'
 import EditTransitionsGif from '@/assets/posts/htmx-unleashed-edit-2.gif'
 
+## Contents
+
+- [Foreword](#foreword)
+- [Setting up our Project](#setting-up-our-project)
+- [Setting up our EJS Templates](#setting-up-our-ejs-templates)
+- [Setting up our Express Server](#setting-up-our-express-server)
+- [Integrating HTMX - Adding Tasks](#integrating-htmx---adding-tasks)
+- [Integrating HTMX - Deleting Tasks](#integrating-htmx---deleting-tasks)
+- [Integrating HTMX - Editing Tasks](#integrating-htmx---editing-tasks)
+- [Integrating HTMX - Adding CSS Transitions](#integrating-htmx---adding-css-transitions)
+- [Wrapping up](#wrapping-up)
+- [Resources](#resources)
+
 ## Foreword
 
 **Prerequisites:**
@@ -41,7 +54,7 @@ We're going to be using HTMX to create a simple reactive frontend, all served fr
 
 We’ll start with a simple **CRUD (Create, Read, Update, Delete) application**, employing **Express**, **EJS**, and **HTMX**. You’ll learn how to add, edit, and delete tasks seamlessly, without full page reloads, served directly from the server.
 
-Our backend will run on TypeScript/JavaScript, with Express handling HTTP requests and delivering SSR content. While we use Express, other languages and frameworks like Python with Flask, Ruby with Rails, or PHP with Laravel are also viable options. HTMX is language and framework agnostic, making it a versatile choice for web development.
+Our backend will run on TypeScript/JavaScript, with Express handling HTTP requests and delivering SSR content. While we use Express, other languages and frameworks like Python with Flask, Ruby with Rails, or PHP with Laravel are also viable options. HTMX is language and framework agnostic, making it a versatile choice for web development. JavaScript and Express were chosen for this tutorial as I believe that's the language most readers will be familiar with.
 
 For templating, we’ll use EJS for its ease in generating HTML markup with plain JavaScript. PicoCSS will style our app, allowing us to concentrate on HTMX’s core functionality and reduce the tedium of HTML and CSS coding. Feel free to adapt this tutorial to your preferred tools and frameworks.
 
