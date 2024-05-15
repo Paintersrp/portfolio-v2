@@ -6,9 +6,7 @@ excerpt: Learn how to deploy your application on a powerful Virtual Private Serv
 category: tutorials
 draft: false
 tags:
-  - linode
-  - nginx
-  - vps
+  - deployment
 ---
 ## Contents
 

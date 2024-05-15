@@ -56,10 +56,10 @@ const postCollection = defineCollection({
 })
 
 const tagCollection = defineCollection({
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     description: z.string().optional(),
-    image: z.string().optional(),
+    image: image(),
     metadata: metadataDefinition(),
   }),
 })

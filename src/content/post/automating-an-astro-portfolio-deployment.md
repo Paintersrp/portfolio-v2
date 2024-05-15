@@ -2,7 +2,7 @@
 created: 2024-05-14T00:00:00Z
 title: Automating an Astro Portfolio Deployment
 image: https://images.unsplash.com/photo-1550439062-609e1531270e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80
-excerpt: Discover how I transformed my portfolio updates from a manual chore to a streamlined, automated process.
+excerpt: Learn how to leverage Makefile and Git hooks to transform your deployment process into a streamlined, error-free operation, allowing you to deploy with confidence and ease.
 category: tutorials
 draft: false
 tags:
