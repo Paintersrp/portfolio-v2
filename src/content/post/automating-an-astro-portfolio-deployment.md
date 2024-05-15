@@ -51,9 +51,9 @@ build:
 	@echo "Building the project locally..."
 	npm run build
 
-deploy: build backup clean
-	@echo "Transferring the new dist to the server..."
-	scp -r dist/* ${SERVER_USER}@${SERVER_HOST}:/usr/share/nginx/html
+deploy: build backup
+	@echo "Transferring the new dist to the server using rsync..."
+	rsync -avz --delete dist/ ${SERVER_USER}@${SERVER_HOST}:/usr/share/nginx/html
 	@echo "Deployment completed successfully!"
 
 backup:
@@ -73,8 +73,14 @@ clean:
 
 recovery:
 	@echo "Available backups on the server:"
-	ssh ${SERVER_USER}@${SERVER_HOST} "ls -ltr ${BACKUP_DIR}"
-	@read -p "Enter the backup file name (e.g., 20240510_123456.tar.gz): " BACKUP_FILE; \
+	@ssh ${SERVER_USER}@${SERVER_HOST} "ls -1t ${BACKUP_DIR}" | nl -v 1
+	@echo "Please select the backup number you wish to recover:"
+	@read -p "Backup number: " BACKUP_NUM; \
+	BACKUP_FILE=$$(ssh ${SERVER_USER}@${SERVER_HOST} "ls -1t ${BACKUP_DIR}" | sed "$${BACKUP_NUM}q;d"); \
+	if [ -z "$$BACKUP_FILE" ]; then \
+		echo "Invalid selection. Exiting."; \
+		exit 1; \
+	fi; \
 	if ssh ${SERVER_USER}@${SERVER_HOST} "[ -f \"${BACKUP_DIR}/$$BACKUP_FILE\" ]"; then \
 		echo "Removing the current website files on the server..."; \
 		ssh ${SERVER_USER}@${SERVER_HOST} "sudo rm -rf /usr/share/nginx/html/*"; \
@@ -82,7 +88,7 @@ recovery:
 		ssh ${SERVER_USER}@${SERVER_HOST} "sudo tar -xzf \"${BACKUP_DIR}/$$BACKUP_FILE\" -C /usr/share/nginx/html"; \
 		echo "Recovery completed successfully!"; \
 	else \
-		echo "Backup file ${BACKUP_DIR}/$$BACKUP_FILE not found on the server. Exiting."; \
+		echo "Backup file $$BACKUP_FILE not found on the server. Exiting."; \
 	fi
 ```
 
@@ -129,12 +135,18 @@ The `build` target is responsible for compiling the project's source code into a
 
 #### Deploy Target
 ```makefile
-deploy: build backup clean
-	@echo "Transferring the new dist to the server..."
-	scp -r dist/* ${SERVER_USER}@${SERVER_HOST}:/usr/share/nginx/html
+deploy: build backup
+	@echo "Transferring the new dist to the server using rsync..."
+	rsync -avz --delete dist/ ${SERVER_USER}@${SERVER_HOST}:/usr/share/nginx/html
 	@echo "Deployment completed successfully!"
 ```
-The `deploy` target orchestrates the deployment process. It ensures that the project is built, backed up, and the previous version is cleaned up before securely copying the new distribution files to the server using `scp`.
+The `deploy` target orchestrates the deployment process. It ensures that the project is built, backed up, and the previous version is cleaned up before securely copying the new distribution files to the server using `rsync`. Using `rsync` for deploying files to a server can be a better option compared to `scp` in many cases. Here's why:
+
+- **Incremental Updates**: `rsync` only transfers the changed parts of files, making it faster for incremental updates after the initial deployment.
+- **Bandwidth Efficiency**: It uses compression and decompression during the transfer, saving bandwidth.
+- **Error Checking**: `rsync` performs error checking after files have been copied, ensuring data integrity.
+- **Preservation of File Attributes**: It can preserve timestamps, permissions, and other file attributes during the transfer.
+- **Flexibility**: `rsync` has many options that can be tailored to various backup and synchronization tasks.
 
 #### Backup Target
 ```makefile
@@ -163,8 +175,14 @@ The `clean` target is designed to clear out the existing files in the server's w
 ```makefile
 recovery:
 	@echo "Available backups on the server:"
-	ssh ${SERVER_USER}@${SERVER_HOST} "ls -ltr ${BACKUP_DIR}"
-	@read -p "Enter the backup file name (e.g., 20240510_123456.tar.gz): " BACKUP_FILE; \
+	@ssh ${SERVER_USER}@${SERVER_HOST} "ls -1t ${BACKUP_DIR}" | nl -v 1
+	@echo "Please select the backup number you wish to recover:"
+	@read -p "Backup number: " BACKUP_NUM; \
+	BACKUP_FILE=$$(ssh ${SERVER_USER}@${SERVER_HOST} "ls -1t ${BACKUP_DIR}" | sed "$${BACKUP_NUM}q;d"); \
+	if [ -z "$$BACKUP_FILE" ]; then \
+		echo "Invalid selection. Exiting."; \
+		exit 1; \
+	fi; \
 	if ssh ${SERVER_USER}@${SERVER_HOST} "[ -f \"${BACKUP_DIR}/$$BACKUP_FILE\" ]"; then \
 		echo "Removing the current website files on the server..."; \
 		ssh ${SERVER_USER}@${SERVER_HOST} "sudo rm -rf /usr/share/nginx/html/*"; \
@@ -172,7 +190,7 @@ recovery:
 		ssh ${SERVER_USER}@${SERVER_HOST} "sudo tar -xzf \"${BACKUP_DIR}/$$BACKUP_FILE\" -C /usr/share/nginx/html"; \
 		echo "Recovery completed successfully!"; \
 	else \
-		echo "Backup file ${BACKUP_DIR}/$$BACKUP_FILE not found on the server. Exiting."; \
+		echo "Backup file $$BACKUP_FILE not found on the server. Exiting."; \
 	fi
 ```
 The `recovery` target provides a mechanism to restore the website from a specified backup. It lists available backups, prompts for a backup file selection, and proceeds with the restoration process if the file exists.

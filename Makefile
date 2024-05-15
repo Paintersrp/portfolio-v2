@@ -9,9 +9,9 @@ build:
 	@echo "Building the project locally..."
 	npm run build
 
-deploy: build backup clean
-	@echo "Transferring the new dist to the server..."
-	scp -r dist/* ${SERVER_USER}@${SERVER_HOST}:/usr/share/nginx/html
+deploy: build backup
+	@echo "Transferring the new dist to the server using rsync..."
+	rsync -avz --delete dist/ ${SERVER_USER}@${SERVER_HOST}:/usr/share/nginx/html
 	@echo "Deployment completed successfully!"
 
 backup:
