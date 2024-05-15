@@ -1,6 +1,6 @@
 ---
 created: 2024-05-14T00:00:00Z
-title: Automating this Astro Portfolio Deployment 2
+title: Automating an Astro Portfolio Deployment
 image: https://images.unsplash.com/photo-1550439062-609e1531270e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80
 excerpt: Discover how I transformed my portfolio updates from a manual chore to a streamlined, automated process.
 category: tutorials
@@ -28,115 +28,165 @@ Traditionally, deploying my Astro website involved:
 
 This manual approach, while clear-cut, proved repetitive and susceptible to human error, prompting me to seek a more automated solution.
 
-## Automating with Bash Scripts
+## Automating with Makefile and Git Hook
 
-To streamline the deployment process, I created two bash scripts: `deploy.sh` and `recover.sh`. These scripts handle tasks like building the project, creating backups, transferring files to the server, and restoring previous versions if needed.
+The Makefile contains targets for building the project, backing up the current website, cleaning the server's document root, deploying the new build, and recovering a previous version if necessary.
 
-### Deploy Script
+### Setting Up a Makefile
 
-The `deploy.sh` script automates the following tasks:
+Here's an example of how to set up a Makefile to automate your deployment process:
 
-1. Builds the Astro project locally using `npm run build`.
-2. Creates a backup of the current website files on the server.
-3. Removes old backups, keeping only the last three for safety.
-4. Removes the current website files from the server's document root.
-5. Transfers the new `dist` files to the server's document root using `scp`.
+1. **Create the Makefile**: In the root directory of your project, create a file named `Makefile`.
+2. **Add the automation script**: Create your targets in this new Makefile. Below is an example of the Makefile used for this Astro Portfolio.
 
-Here's the contents of the `deploy.sh` script:
+```makefile
+# Environment variables
+SERVER_USER ?= root
+SERVER_HOST ?= server_ip
+BACKUP_DIR ?= /path/to/backups
+
+.PHONY: build deploy backup clean recovery
+
+build:
+	@echo "Building the project locally..."
+	npm run build
+
+deploy: build backup clean
+	@echo "Transferring the new dist to the server..."
+	scp -r dist/* ${SERVER_USER}@${SERVER_HOST}:/usr/share/nginx/html
+	@echo "Deployment completed successfully!"
+
+backup:
+	@echo "Backing up the current website on the server..."
+	ssh ${SERVER_USER}@${SERVER_HOST} "\
+		BACKUP_DIR='${BACKUP_DIR}' && \
+		sudo mkdir -p \$$BACKUP_DIR && \
+		BACKUP_FILE=\"\$$BACKUP_DIR/\$$(date +%Y%m%d_%H%M%S).tar.gz\" && \
+		sudo tar -czf \$$BACKUP_FILE -C /usr/share/nginx/html . && \
+		echo 'Cleaning up old backups...' && \
+		cd \$$BACKUP_DIR && \
+		ls -t | sed -e '1,3d' | xargs -d '\\n' sudo rm -f --"
+
+clean:
+	@echo "Removing the current website files on the server..."
+	ssh ${SERVER_USER}@${SERVER_HOST} "sudo rm -rf /usr/share/nginx/html/*"
+
+recovery:
+	@echo "Available backups on the server:"
+	ssh ${SERVER_USER}@${SERVER_HOST} "ls -ltr ${BACKUP_DIR}"
+	@read -p "Enter the backup file name (e.g., 20240510_123456.tar.gz): " BACKUP_FILE; \
+	if ssh ${SERVER_USER}@${SERVER_HOST} "[ -f \"${BACKUP_DIR}/$$BACKUP_FILE\" ]"; then \
+		echo "Removing the current website files on the server..."; \
+		ssh ${SERVER_USER}@${SERVER_HOST} "sudo rm -rf /usr/share/nginx/html/*"; \
+		echo "Extracting the backup $$BACKUP_FILE on the server..."; \
+		ssh ${SERVER_USER}@${SERVER_HOST} "sudo tar -xzf \"${BACKUP_DIR}/$$BACKUP_FILE\" -C /usr/share/nginx/html"; \
+		echo "Recovery completed successfully!"; \
+	else \
+		echo "Backup file ${BACKUP_DIR}/$$BACKUP_FILE not found on the server. Exiting."; \
+	fi
+```
+
+### Setting Up the Git Pre-Push Hook
+
+To ensure your changes are deployed before they are pushed to the repository, follow these steps:
+
+1. **Navigate to the hooks directory**: Go to the `.git/hooks` directory within your local repository.
+2. **Create the pre-push script**: If it doesn't already exist, create a file named `pre-push` in the hooks directory.
+3. **Make the script executable**: Run the command `chmod +x pre-push` to make the script executable.
+4. **Add the hook script**: Add your pre-push content in this file. Below is an example of the pre-push script which runs the make deploy for this Astro Portfolio.
 
 ```bash
 #!/bin/bash
 
-# Add your SSH key to the agent
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    eval "$(ssh-agent -s)"
+# Run make deploy before pushing
+make deploy
+
+# If make deploy fails, exit with non-zero status to abort the push
+if [ $? -ne 0 ]; then
+  exit 1
 fi
-ssh-add -q ~/.ssh/id_ed25519
-
-SERVER_USER="srp"
-SERVER_HOST="server_ip"
-BACKUP_DIR="/home/srp/backups/portfolio"
-MAX_BACKUPS=3
-
-echo "Building the project locally..."
-cd /path/to/your/astro/project
-npm run build
-
-echo "Backing up the current website on the server..."
-ssh "${SERVER_USER}@${SERVER_HOST}" "\
-    BACKUP_DIR='${BACKUP_DIR}' && \
-    sudo mkdir -p \"\$BACKUP_DIR\" && \
-    BACKUP_FILE=\"\$BACKUP_DIR/$(date +%Y%m%d_%H%M%S).tar.gz\" && \
-    sudo tar -czf \"\$BACKUP_FILE\" -C /path/to/server/document/root ."
-
-echo "Removing old backups, keeping only the last ${MAX_BACKUPS}..."
-ssh "${SERVER_USER}@${SERVER_HOST}" "ls -1t ${BACKUP_DIR} | tail -n +$((${MAX_BACKUPS} + 1)) | xargs -I{} rm ${BACKUP_DIR}/{}"
-
-echo "Removing the current website files on the server..."
-ssh "${SERVER_USER}@${SERVER_HOST}" "sudo rm -rf /path/to/server/document/root/*"
-
-echo "Transferring the new dist to the server..."
-scp -r /path/to/your/astro/project/dist/* "${SERVER_USER}@${SERVER_HOST}:/path/to/server/document/root"
-
-echo "Deployment completed successfully!"
 ```
 
-To run the script, simply execute `bash deploy.sh` in your terminal.
+This script automates the deployment process by running the `make deploy` command before any `git push` operation.
 
-### Recovery Script
+## Breaking Down the Makefile
 
-In case I need to revert to a previous version of this portfolio website, the `recover.sh` script allows me to restore a specific backup from the server.
-
-```bash
-#!/bin/bash
-
-# Add your SSH key to the agent
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    eval "$(ssh-agent -s)"
-fi
-ssh-add -q ~/.ssh/id_ed25519
-
-SERVER_USER="srp"
-SERVER_HOST="server_ip"
-BACKUP_DIR="/home/srp/backups/portfolio"
-
-echo "Available backups on the server:"
-ssh "${SERVER_USER}@${SERVER_HOST}" "ls -ltr ${BACKUP_DIR}"
-
-read -p "Enter the backup file name (e.g., 20240510_123456.tar.gz): " BACKUP_FILE
-
-if [ -z "$BACKUP_FILE" ]; then
-    echo "No backup file specified. Exiting."
-    exit 1
-fi
-
-BACKUP_PATH="${BACKUP_DIR}/${BACKUP_FILE}"
-
-if ! ssh "${SERVER_USER}@${SERVER_HOST}" "[ -f \"${BACKUP_PATH}\" ]"; then
-    echo "Backup file ${BACKUP_PATH} not found on the server. Exiting."
-    exit 1
-fi
-
-echo "Removing the current website files on the server..."
-ssh "${SERVER_USER}@${SERVER_HOST}" "sudo rm -rf /path/to/server/document/root/*"
-
-echo "Extracting the backup ${BACKUP_FILE} on the server..."
-ssh "${SERVER_USER}@${SERVER_HOST}" "sudo tar -xzf \"${BACKUP_PATH}\" -C /path/to/server/document/root"
-
-echo "Recovery completed successfully!"
+#### Environment Variables
+```makefile
+SERVER_USER ?= root
+SERVER_HOST ?= server_ip
+BACKUP_DIR ?= /path/to/backups
 ```
+These lines establish default values for the server's user, host, and backup directory. They act as placeholders that can be overridden with custom values when invoking the make command.
 
-To use the recovery script, I run `recover.sh` and follow the prompts to select the backup file I want to restore.
+#### Build Target
+```makefile
+build:
+	@echo "Building the project locally..."
+	npm run build
+```
+The `build` target is responsible for compiling the project's source code into a set of static files. It uses the Node package manager (npm) to execute the build script defined in the project's `package.json` file.
+
+#### Deploy Target
+```makefile
+deploy: build backup clean
+	@echo "Transferring the new dist to the server..."
+	scp -r dist/* ${SERVER_USER}@${SERVER_HOST}:/usr/share/nginx/html
+	@echo "Deployment completed successfully!"
+```
+The `deploy` target orchestrates the deployment process. It ensures that the project is built, backed up, and the previous version is cleaned up before securely copying the new distribution files to the server using `scp`.
+
+#### Backup Target
+```makefile
+backup:
+	@echo "Backing up the current website on the server..."
+	ssh ${SERVER_USER}@${SERVER_HOST} "\
+		BACKUP_DIR='${BACKUP_DIR}' && \
+		sudo mkdir -p \$$BACKUP_DIR && \
+		BACKUP_FILE=\"\$$BACKUP_DIR/\$$(date +%Y%m%d_%H%M%S).tar.gz\" && \
+		sudo tar -czf \$$BACKUP_FILE -C /usr/share/nginx/html . && \
+		echo 'Cleaning up old backups...' && \
+		cd \$$BACKUP_DIR && \
+		ls -t | sed -e '1,3d' | xargs -d '\\n' sudo rm -f --"
+```
+The `backup` target secures the current live website by creating a compressed archive with a timestamp. It also includes a cleanup process to remove older backups, keeping the most recent three.
+
+#### Clean Target
+```makefile
+clean:
+	@echo "Removing the current website files on the server..."
+	ssh ${SERVER_USER}@${SERVER_HOST} "sudo rm -rf /usr/share/nginx/html/*"
+```
+The `clean` target is designed to clear out the existing files in the server's web directory. This is a preparatory step to ensure that the new deployment does not mix with old files.
+
+#### Recovery Target
+```makefile
+recovery:
+	@echo "Available backups on the server:"
+	ssh ${SERVER_USER}@${SERVER_HOST} "ls -ltr ${BACKUP_DIR}"
+	@read -p "Enter the backup file name (e.g., 20240510_123456.tar.gz): " BACKUP_FILE; \
+	if ssh ${SERVER_USER}@${SERVER_HOST} "[ -f \"${BACKUP_DIR}/$$BACKUP_FILE\" ]"; then \
+		echo "Removing the current website files on the server..."; \
+		ssh ${SERVER_USER}@${SERVER_HOST} "sudo rm -rf /usr/share/nginx/html/*"; \
+		echo "Extracting the backup $$BACKUP_FILE on the server..."; \
+		ssh ${SERVER_USER}@${SERVER_HOST} "sudo tar -xzf \"${BACKUP_DIR}/$$BACKUP_FILE\" -C /usr/share/nginx/html"; \
+		echo "Recovery completed successfully!"; \
+	else \
+		echo "Backup file ${BACKUP_DIR}/$$BACKUP_FILE not found on the server. Exiting."; \
+	fi
+```
+The `recovery` target provides a mechanism to restore the website from a specified backup. It lists available backups, prompts for a backup file selection, and proceeds with the restoration process if the file exists.
+
 
 ## Enhancing Further
 
-While the current scripts have significantly improved the deployment process, there are always ways to enhance and refine:
+While the Makefile and Git hook have significantly improved the deployment process, I'm always looking for ways to enhance and refine:
 
-1. **Integrating with CI/CD**: Setting up continuous integration and deployment pipelines to automate the process further.
+1. **Integrating with CI/CD**: Setting up continuous integration and deployment pipelines to automate the process even further.
 2. **Monitoring**: Implementing monitoring tools to check the health and performance of the portfolio post-deployment.
 
 ## Conclusion
 
-In conclusion, automating the deployment process of my Astro portfolio has been a game-changer. It has not only saved me time but also reduced the risk of human error that comes with manual deployment. The deploy.sh and recover.sh scripts have become essential tools in my development toolkit, ensuring that updates to my portfolio are seamless and stress-free.
+Automating the deployment process of my Astro portfolio with a Makefile and Git hook has been incredibly efficient. It ensures that my portfolio is always up-to-date with the latest changes in my repository, with minimal manual intervention. This level of automation allows me to focus more on development and creativity, rather than the mechanics of deployment.
 
 As developers, we should always be looking for ways to optimize our workflows. Automation is a key step in that direction, and I hope this tutorial inspires you to explore automation in your projects. Remember, the goal is to make our lives easier and allow us to spend more time on creative endeavors rather than repetitive tasks.
